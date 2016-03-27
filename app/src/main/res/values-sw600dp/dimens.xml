@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="margin_medium">24dp</dimen>
+    <dimen name="margin_small">16dp</dimen>
+
+    <dimen name="small_cover_width">150dp</dimen>
+    <dimen name="small_cover_height">150dp</dimen>
+
+</resources>
