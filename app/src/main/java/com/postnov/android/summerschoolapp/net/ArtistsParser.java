@@ -2,13 +2,12 @@ package com.postnov.android.summerschoolapp.net;
 
 import android.content.ContentValues;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 import java.util.ArrayList;
 import java.util.List;
+import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
 
 /**

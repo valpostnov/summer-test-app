@@ -3,20 +3,21 @@ package com.postnov.android.summerschoolapp.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 /**
  * Created by postnov on 25.03.2016.
  */
 public class Utils {
 
-    public static boolean checkNetworkConnection(Context context) {
+    public static boolean checkNetworkConnection(Context context)
+    {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
         return  (activeInfo != null && activeInfo.isConnected());
     }
 
-    public static String getCorrectTrackString(String num) {
+    public static String getCorrectTrackString(String num)
+    {
         char lastNumber = num.charAt(num.length() - 1);
 
         if (Integer.valueOf(num) > 9 && Integer.valueOf(num) < 20)
@@ -39,7 +40,8 @@ public class Utils {
         }
     }
 
-    public static String getCorrectAlbumString(String num) {
+    public static String getCorrectAlbumString(String num)
+    {
         char lastNumber = num.charAt(num.length() - 1);
 
         if (Integer.valueOf(num) > 9 && Integer.valueOf(num) < 20)
@@ -60,9 +62,5 @@ public class Utils {
             default:
                 return num + " альбомов";
         }
-    }
-
-    public static void showErrorMsg(Context context, String error) {
-        Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
     }
 }

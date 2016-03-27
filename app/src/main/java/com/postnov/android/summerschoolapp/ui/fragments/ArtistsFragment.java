@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.db.DBUtils;
@@ -20,6 +19,8 @@ import com.postnov.android.summerschoolapp.service.LoaderService;
 import com.postnov.android.summerschoolapp.ui.activity.DetailsActivity;
 import com.postnov.android.summerschoolapp.ui.adapter.ArtistsAdapter;
 import com.postnov.android.summerschoolapp.utils.Utils;
+
+import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
 public class ArtistsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
@@ -59,6 +60,7 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setRetainInstance(true);
+
         if (!DBUtils.cacheIsEmpty(getActivity()))
         {
             runService(JSON_URL);
@@ -94,7 +96,7 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
             mAdapter.changeCursor(null);
             if (!Utils.checkNetworkConnection(getActivity()))
             {
-                setEmptyText(getText(R.string.list_artists_empty));
+                setEmptyText(getText(R.string.list_empty));
             }
             else
             {
@@ -131,7 +133,8 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
+    public void onListItemClick(ListView l, View v, int position, long id)
+    {
         super.onListItemClick(l, v, position, id);
 
         Cursor c = (Cursor) mAdapter.getItem(position);
@@ -151,7 +154,7 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
         intent.putExtra(Artist.COLUMN_COVER_BIG, coverLink);
 
         View sharedView = v.findViewById(R.id.item_artist_cover);
-        String transitionName = getString(R.string.image_shared_element);
+        String transitionName = getString(R.string.shared_element);
 
         ActivityOptions transitionAO;
         transitionAO = ActivityOptions.makeSceneTransitionAnimation(getActivity(), sharedView, transitionName);

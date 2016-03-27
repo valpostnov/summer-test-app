@@ -10,7 +10,7 @@
         android:layout_width="@dimen/small_cover_width"
         android:layout_height="@dimen/small_cover_height"
         android:scaleType="centerCrop"
-        android:transitionName="@string/image_shared_element"
+        android:transitionName="@string/shared_element"
         />
     <LinearLayout
         android:orientation="vertical"

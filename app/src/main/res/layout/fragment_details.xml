@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:layout_weight="1"
-        android:transitionName="@string/image_shared_element"
+        android:transitionName="@string/shared_element"
         />
     <ScrollView
         android:layout_width="match_parent"
