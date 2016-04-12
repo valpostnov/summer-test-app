@@ -45,7 +45,6 @@ public class ArtistsAdapter extends CursorAdapter
 
         Glide.with(context)
                 .load(cursor.getString(ArtistsFragment.COLUMN_COVER_SMALL))
-                .asBitmap()
                 .dontAnimate()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .thumbnail(0.1f)

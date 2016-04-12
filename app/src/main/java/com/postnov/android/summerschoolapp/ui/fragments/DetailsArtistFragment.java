@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
@@ -66,9 +65,7 @@ public class DetailsArtistFragment extends Fragment {
         actionBar.setTitle(artistsName);
         Glide.with(this)
                 .load(coverLink)
-                .asBitmap()
                 .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .thumbnail(0.2f)
                 .fitCenter()
                 .into(coverView);

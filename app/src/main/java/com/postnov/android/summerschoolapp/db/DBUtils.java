@@ -4,7 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.postnov.android.summerschoolapp.model.ArtistModel;
 import com.postnov.android.summerschoolapp.utils.Utils;
+
+import java.util.Arrays;
 
 import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
@@ -47,5 +50,21 @@ public class DBUtils {
             cursor.close();
         }
         return hasRows;
+    }
+
+    /*
+        Конвертим ArtistModel в ContentValues
+     */
+    public static ContentValues toCV(ArtistModel artist) {
+        ContentValues cv = new ContentValues();
+        cv.put(Artist.COLUMN_ARTIST_ID, artist.getId());
+        cv.put(Artist.COLUMN_ARTIST_NAME, artist.getName());
+        cv.put(Artist.COLUMN_TRACKS, artist.getTracks());
+        cv.put(Artist.COLUMN_ALBUMS, artist.getAlbums());
+        cv.put(Artist.COLUMN_DESC, artist.getDesc());
+        cv.put(Artist.COLUMN_COVER_SMALL, artist.getCover().getCoverSmall());
+        cv.put(Artist.COLUMN_COVER_BIG, artist.getCover().getCoverBig());
+        cv.put(Artist.COLUMN_GENRES, artist.getGenres());
+        return cv;
     }
 }

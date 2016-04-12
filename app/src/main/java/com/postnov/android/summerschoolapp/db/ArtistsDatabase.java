@@ -3,6 +3,7 @@ package com.postnov.android.summerschoolapp.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
 /**
