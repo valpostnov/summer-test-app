@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/port_scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.postnov.android.summerschoolapp.ui.activity.DetailsActivity"
     android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/linearLayoutPort"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/detail_cover"
