@@ -1,13 +1,13 @@
 package com.postnov.android.summerschoolapp.ui.fragments;
 
 import android.app.ActivityOptions;
-import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -22,11 +22,8 @@ import com.postnov.android.summerschoolapp.utils.Utils;
 
 import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
-public class ArtistsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>
+public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-
-    public static final String URL_EXTRA ="url";
-    private static final String JSON_URL = "http://download.cdn.yandex.net/mobilization-2016/artists.json";
 
     private ArtistsAdapter mAdapter;
 
@@ -58,23 +55,35 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         setRetainInstance(true);
 
         if (!DBUtils.cacheIsEmpty(getActivity()))
         {
-            runService(JSON_URL);
+            runService();
         }
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mAdapter = new ArtistsAdapter(getActivity(), null, 0);
+        setListAdapter(mAdapter);
+        initLoader();
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
-        mAdapter = new ArtistsAdapter(getActivity(), null, 0);
-        setListAdapter(mAdapter);
-        initLoader();
+        setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //удаляем старые записи
+                DBUtils.deleteCache(getActivity());
+                //грузим новые данные
+                runService();
+            }
+        });
     }
 
     @Override
@@ -107,6 +116,7 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
         {
             mAdapter.changeCursor(data);
             setListShown(true);
+            setRefreshing(false);
         }
     }
 
@@ -114,22 +124,6 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
     public void onLoaderReset(Loader<Cursor> loader)
     {
         mAdapter.changeCursor(null);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        int id = item.getItemId();
-        switch (id)
-        {
-            case R.id.action_refresh:
-                //удаляем старые записи
-                DBUtils.deleteCache(getActivity());
-                //грузим новые данные
-                runService(JSON_URL);
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     @Override
@@ -161,7 +155,7 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
         startActivity(intent, transitionAO.toBundle());
     }
 
-    private void runService(String text)
+    private void runService()
     {
         /*
          * Проверяем доступность сети.
@@ -170,7 +164,6 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
         if (Utils.checkNetworkConnection(getActivity()))
         {
             Intent intent = new Intent(getActivity(), LoaderService.class);
-            intent.putExtra(URL_EXTRA, text);
             getActivity().startService(intent);
         }
         else
@@ -183,4 +176,5 @@ public class ArtistsFragment extends ListFragment implements LoaderManager.Loade
     {
         getLoaderManager().initLoader(0, null, this);
     }
+
 }
