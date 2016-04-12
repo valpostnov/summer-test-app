@@ -12,7 +12,7 @@ import retrofit2.http.GET;
 /**
  * Created by postnov on 12.04.2016.
  */
-public interface SSAService {
+public interface AService {
 
     String ENDPOINT = "http://download.cdn.yandex.net/";
 

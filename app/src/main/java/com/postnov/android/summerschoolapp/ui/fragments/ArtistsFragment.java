@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.db.DBUtils;
@@ -23,7 +22,6 @@ import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artis
 
 public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
-
     private ArtistsAdapter mAdapter;
 
     private static final String[] PROJECTION = new String[]
@@ -38,7 +36,6 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
                 Artist.COLUMN_COVER_SMALL,
                 Artist.COLUMN_COVER_BIG
             };
-
 
     public static final int COLUMN_NAME = 2;
     public static final int COLUMN_GENRES = 3;
@@ -55,10 +52,9 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
         if (!DBUtils.cacheIsExist(getActivity()))
         {
-            runService();
+            runService(false);
         }
     }
 
@@ -80,17 +76,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
             @Override
             public void onRefresh()
             {
-                if (Utils.checkNetworkConnection(getActivity()))
-                {
-                    DBUtils.deleteCache(getActivity());
-                    runService();
-                }
-                else
-                {
-                    setRefreshing(false);
-                    Toast.makeText(getActivity(), getText(R.string.no_network_connection),
-                            Toast.LENGTH_SHORT).show();
-                }
+                runService(true);
             }
         });
     }
@@ -111,19 +97,24 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     {
         if (!data.moveToFirst())
         {
-            mAdapter.changeCursor(null);
             if (!Utils.checkNetworkConnection(getActivity()))
             {
                 setEmptyText(getText(R.string.list_empty));
             }
             else
             {
+                mAdapter.swapCursor(data);
                 setEmptyText(getText(R.string.download_list));
+                getSwipeRefreshLayout().post(new Runnable() {
+                    @Override public void run() {
+                        setRefreshing(true);
+                    }
+                });
             }
         }
         else
         {
-            mAdapter.changeCursor(data);
+            mAdapter.swapCursor(data);
             setRefreshing(false);
         }
     }
@@ -131,7 +122,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     @Override
     public void onLoaderReset(Loader<Cursor> loader)
     {
-        mAdapter.changeCursor(null);
+        mAdapter.swapCursor(null);
     }
 
     @Override
@@ -163,15 +154,22 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         startActivity(intent, transitionAO.toBundle());
     }
 
-    private void runService()
+    private synchronized void runService(boolean wipeCache)
     {
-        Intent intent = new Intent(getActivity(), LoaderService.class);
-        getActivity().startService(intent);
+        if (Utils.checkNetworkConnection(getActivity()))
+        {
+            DBUtils.deleteCache(getActivity(), wipeCache);
+            Intent intent = new Intent(getActivity(), LoaderService.class);
+            getActivity().startService(intent);
+        }
+        else
+        {
+            Utils.showToast(getActivity(), getString(R.string.no_network_connection));
+        }
     }
 
     private void initLoader()
     {
         getLoaderManager().initLoader(0, null, this);
     }
-
 }

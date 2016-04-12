@@ -5,9 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.postnov.android.summerschoolapp.model.ArtistModel;
-import com.postnov.android.summerschoolapp.utils.Utils;
-
-import java.util.Arrays;
 
 import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
 
@@ -20,9 +17,10 @@ public class DBUtils {
         Очищаем некий "кэш" с исполнителями, в том случае,
         если есть подключение к сети
     */
-    public static int deleteCache(Context context)
+    public static int deleteCache(Context context, boolean delete)
     {
-        return context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
+        if (delete) return context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
+        return -1;
     }
     /*
         Добавляем нового исполнителя
@@ -36,7 +34,7 @@ public class DBUtils {
     /*
         Проверяем, есть ли записи в кеше
     */
-    public static boolean cacheIsExist(Context context) {
+    public synchronized static boolean cacheIsExist(Context context) {
         boolean hasRows = false;
         Cursor cursor;
         cursor = context.getContentResolver().query(Artist.CONTENT_URI, null, null, null,null);

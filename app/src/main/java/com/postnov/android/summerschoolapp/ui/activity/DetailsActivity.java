@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.ui.fragments.ArtistsFragment;
 import com.postnov.android.summerschoolapp.ui.fragments.DetailsArtistFragment;
 
 
