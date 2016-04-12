@@ -20,13 +20,9 @@ public class DBUtils {
         Очищаем некий "кэш" с исполнителями, в том случае,
         если есть подключение к сети
     */
-    public static boolean deleteCache(Context context)
+    public static int deleteCache(Context context)
     {
-        if (Utils.checkNetworkConnection(context)) {
-            context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
-            return true;
-        }
-        return false;
+        return context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
     }
     /*
         Добавляем нового исполнителя
@@ -40,7 +36,7 @@ public class DBUtils {
     /*
         Проверяем, есть ли записи в кеше
     */
-    public static boolean cacheIsEmpty(Context context) {
+    public static boolean cacheIsExist(Context context) {
         boolean hasRows = false;
         Cursor cursor;
         cursor = context.getContentResolver().query(Artist.CONTENT_URI, null, null, null,null);

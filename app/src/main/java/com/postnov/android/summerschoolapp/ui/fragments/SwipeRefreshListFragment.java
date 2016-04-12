@@ -27,69 +27,82 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 
-public class SwipeRefreshListFragment extends ListFragment {
+public class SwipeRefreshListFragment extends ListFragment
+{
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
 
         final View listFragmentView = super.onCreateView(inflater, container, savedInstanceState);
 
         mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
 
-        mSwipeRefreshLayout.addView(listFragmentView,
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mSwipeRefreshLayout.addView(
+                listFragmentView,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
 
-        mSwipeRefreshLayout.setLayoutParams(
-                new ViewGroup.LayoutParams(
+        mSwipeRefreshLayout.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
 
         return mSwipeRefreshLayout;
     }
 
-    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener) {
+    public void setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener listener)
+    {
         mSwipeRefreshLayout.setOnRefreshListener(listener);
     }
 
-    public boolean isRefreshing() {
+    public boolean isRefreshing()
+    {
         return mSwipeRefreshLayout.isRefreshing();
     }
 
-    public void setRefreshing(boolean refreshing) {
+    public void setRefreshing(boolean refreshing)
+    {
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
-    public void setColorScheme(int colorRes1, int colorRes2, int colorRes3, int colorRes4) {
-        mSwipeRefreshLayout.setColorScheme(colorRes1, colorRes2, colorRes3, colorRes4);
+    public void setColorScheme(int colorRes1, int colorRes2, int colorRes3, int colorRes4)
+    {
+        mSwipeRefreshLayout.setColorSchemeResources(colorRes1, colorRes2, colorRes3, colorRes4);
     }
 
-    public SwipeRefreshLayout getSwipeRefreshLayout() {
+    public SwipeRefreshLayout getSwipeRefreshLayout()
+    {
         return mSwipeRefreshLayout;
     }
 
-    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
+    private class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout
+    {
 
-        public ListFragmentSwipeRefreshLayout(Context context) {
+        public ListFragmentSwipeRefreshLayout(Context context)
+        {
             super(context);
         }
 
         @Override
-        public boolean canChildScrollUp() {
+        public boolean canChildScrollUp()
+        {
             final ListView listView = getListView();
             return listView.getVisibility() == View.VISIBLE && canListViewScrollUp(listView);
         }
 
     }
 
-    private static boolean canListViewScrollUp(ListView listView) {
-        if (android.os.Build.VERSION.SDK_INT >= 14) {
+    private static boolean canListViewScrollUp(ListView listView)
+    {
+        if (android.os.Build.VERSION.SDK_INT >= 14)
+        {
             // For ICS and above we can call canScrollVertically() to determine this
             return ViewCompat.canScrollVertically(listView, -1);
-        } else {
+        }
+        else
+        {
             // Pre-ICS we need to manually check the first visible item and the child view's top
             // value
             return listView.getChildCount() > 0 &&

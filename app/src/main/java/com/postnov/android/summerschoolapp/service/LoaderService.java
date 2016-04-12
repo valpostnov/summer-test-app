@@ -32,8 +32,8 @@ public class LoaderService extends IntentService
 
         try
         {
-            SSAService yaService = SSAService.retrofit.create(SSAService.class);
-            Call<List<ArtistModel>> call = yaService.listArtists();
+            SSAService ssaService = SSAService.retrofit.create(SSAService.class);
+            Call<List<ArtistModel>> call = ssaService.listArtists();
             List<ArtistModel> artists = call.execute().body();
 
             for (ArtistModel a : artists)

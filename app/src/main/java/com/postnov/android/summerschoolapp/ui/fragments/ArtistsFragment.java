@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,14 +56,15 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if (!DBUtils.cacheIsEmpty(getActivity()))
+        if (!DBUtils.cacheIsExist(getActivity()))
         {
             runService();
         }
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new ArtistsAdapter(getActivity(), null, 0);
         setListAdapter(mAdapter);
@@ -75,13 +75,22 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+        {
             @Override
-            public void onRefresh() {
-                //удаляем старые записи
-                DBUtils.deleteCache(getActivity());
-                //грузим новые данные
-                runService();
+            public void onRefresh()
+            {
+                if (Utils.checkNetworkConnection(getActivity()))
+                {
+                    DBUtils.deleteCache(getActivity());
+                    runService();
+                }
+                else
+                {
+                    setRefreshing(false);
+                    Toast.makeText(getActivity(), getText(R.string.no_network_connection),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -89,7 +98,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args)
     {
-        return new CursorLoader(getActivity(),      // Context
+        return new CursorLoader(getActivity(),
                 Artist.CONTENT_URI,                 // URI
                 PROJECTION,                         // Projection
                 null,                               // Selection
@@ -109,13 +118,12 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
             }
             else
             {
-                setListShown(false);
+                setEmptyText(getText(R.string.download_list));
             }
         }
         else
         {
             mAdapter.changeCursor(data);
-            setListShown(true);
             setRefreshing(false);
         }
     }
@@ -157,19 +165,8 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
 
     private void runService()
     {
-        /*
-         * Проверяем доступность сети.
-         * В случае удачи, запускаем вервис
-         */
-        if (Utils.checkNetworkConnection(getActivity()))
-        {
-            Intent intent = new Intent(getActivity(), LoaderService.class);
-            getActivity().startService(intent);
-        }
-        else
-        {
-            Toast.makeText(getActivity(), getText(R.string.no_network_connection), Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(getActivity(), LoaderService.class);
+        getActivity().startService(intent);
     }
 
     private void initLoader()

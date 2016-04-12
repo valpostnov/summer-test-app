@@ -3,6 +3,9 @@
     <dimen name="margin_medium">16dp</dimen>
     <dimen name="margin_small">8dp</dimen>
 
+    <dimen name="layout_padding_left">0dp</dimen>
+    <dimen name="layout_padding_right">0dp</dimen>
+
     <dimen name="small_cover_width">100dp</dimen>
     <dimen name="small_cover_height">100dp</dimen>
 </resources>

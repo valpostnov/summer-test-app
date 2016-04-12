@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             ArtistsFragment fragment = new ArtistsFragment();
             transaction.replace(R.id.content_fragment, fragment);
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             transaction.commit();
         }
     }
