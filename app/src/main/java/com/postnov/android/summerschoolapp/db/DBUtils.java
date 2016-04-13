@@ -14,8 +14,7 @@ import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artis
 public class DBUtils {
 
     /*
-        Очищаем некий "кэш" с исполнителями, в том случае,
-        если есть подключение к сети
+        Очищаем некий "кэш" с исполнителями
     */
     public static int deleteCache(Context context, boolean delete)
     {

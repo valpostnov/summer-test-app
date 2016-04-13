@@ -2,9 +2,11 @@ package com.postnov.android.summerschoolapp.ui.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +33,6 @@ public class ArtistsAdapter extends CursorAdapter
         int layoutId = R.layout.item_artist;
 
         View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
-
         ViewHolder viewHolder = new ViewHolder(view);
         view.setTag(viewHolder);
 

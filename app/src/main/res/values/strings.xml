@@ -13,4 +13,5 @@
     <string name="status_404">404:Not Found</string>
     <string name="status_503">503:Service Unavailable</string>
     <string name="status_504">504:Gateway Timeout</string>
+    <string name="status_not_entries">Все артисты загружены</string>
 </resources>

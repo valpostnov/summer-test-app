@@ -8,7 +8,9 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.postnov.android.summerschoolapp.R;
@@ -16,13 +18,16 @@ import com.postnov.android.summerschoolapp.db.DBUtils;
 import com.postnov.android.summerschoolapp.service.LoaderService;
 import com.postnov.android.summerschoolapp.ui.activity.DetailsActivity;
 import com.postnov.android.summerschoolapp.ui.adapter.ArtistsAdapter;
+import com.postnov.android.summerschoolapp.utils.Const;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import static com.postnov.android.summerschoolapp.provider.ArtistsContract.Artist;
+import static com.postnov.android.summerschoolapp.utils.Const.LOADED_ARTISTS_COUNT;
 
 public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private ArtistsAdapter mAdapter;
+    private View mFooter;
 
     private static final String[] PROJECTION = new String[]
             {
@@ -54,7 +59,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         setRetainInstance(true);
         if (!DBUtils.cacheIsExist(getActivity()))
         {
-            runService(false);
+            runService(false, 0);
         }
     }
 
@@ -63,7 +68,18 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new ArtistsAdapter(getActivity(), null, 0);
+        mFooter = getActivity().getLayoutInflater().inflate(R.layout.item_footer, null);
+
+        Button buttonLoadMore = (Button) mFooter.findViewById(R.id.loadMoreBtn);
+        buttonLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                runService(false, getListAdapter().getCount());
+            }
+        });
+
         setListAdapter(mAdapter);
+        getListView().addFooterView(mFooter);
         initLoader();
     }
 
@@ -76,9 +92,15 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
             @Override
             public void onRefresh()
             {
-                runService(true);
+                runService(true, 0);
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        getListView().removeFooterView(mFooter);
+        super.onDestroyView();
     }
 
     @Override
@@ -154,16 +176,18 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         startActivity(intent, transitionAO.toBundle());
     }
 
-    private synchronized void runService(boolean wipeCache)
+    private synchronized void runService(boolean wipeCache, int loadedCount)
     {
         if (Utils.checkNetworkConnection(getActivity()))
         {
             DBUtils.deleteCache(getActivity(), wipeCache);
             Intent intent = new Intent(getActivity(), LoaderService.class);
+            intent.putExtra(LOADED_ARTISTS_COUNT, loadedCount);
             getActivity().startService(intent);
         }
         else
         {
+            setRefreshing(false);
             Utils.showToast(getActivity(), getString(R.string.no_network_connection));
         }
     }

@@ -14,6 +14,8 @@ import com.postnov.android.summerschoolapp.ui.fragments.ArtistsFragment;
 import com.postnov.android.summerschoolapp.utils.Const;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
+import static com.postnov.android.summerschoolapp.utils.Const.*;
+
 
 public class MainActivity extends Activity {
 
@@ -24,7 +26,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        IntentFilter statusIntentFilter = new IntentFilter(Const.BROADCAST_ACTION);
+        IntentFilter statusIntentFilter = new IntentFilter(BROADCAST_ACTION);
         statusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         mDownloadStateReceiver = new DownloadStateReceiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(mDownloadStateReceiver, statusIntentFilter);
@@ -53,23 +55,26 @@ public class MainActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            int statusCode = intent.getIntExtra(Const.EXTENDED_DATA_STATUS, Const.STATE_ACTION_UNKNOWN);
+            int statusCode = intent.getIntExtra(EXTENDED_DATA_STATUS, STATE_ACTION_UNKNOWN);
 
             switch (statusCode)
             {
-                case Const.STATE_ACTION_UNKNOWN:
+                case STATE_ACTION_ALL_DOWNLOADED:
+                    Utils.showToast(MainActivity.this, getString(R.string.status_not_entries));
+                    break;
+                case STATE_ACTION_UNKNOWN:
                     Utils.showToast(MainActivity.this, getString(R.string.status_unknown));
                     break;
-                case Const.STATE_ACTION_400:
+                case STATE_ACTION_400:
                     Utils.showToast(MainActivity.this, getString(R.string.status_400));
                     break;
-                case Const.STATE_ACTION_404:
+                case STATE_ACTION_404:
                     Utils.showToast(MainActivity.this, getString(R.string.status_404));
                     break;
-                case Const.STATE_ACTION_503:
+                case STATE_ACTION_503:
                     Utils.showToast(MainActivity.this, getString(R.string.status_503));
                     break;
-                case Const.STATE_ACTION_504:
+                case STATE_ACTION_504:
                     Utils.showToast(MainActivity.this, getString(R.string.status_504));
                     break;
             }

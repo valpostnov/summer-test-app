@@ -5,7 +5,11 @@ public final class Const {
 
     public static final String BROADCAST_ACTION = "com.postnov.android.summerschoolapp.BROADCAST";
     public static final String EXTENDED_DATA_STATUS = "com.postnov.android.summerschoolapp.STATUS";
+    public static final String LOADED_ARTISTS_COUNT = "com.postnov.android.summerschoolapp.COUNT";
 
+
+    // all artists was downloaded
+    public static final int STATE_ACTION_ALL_DOWNLOADED = 1;
 
     // Bad Request
     public static final int STATE_ACTION_UNKNOWN = -1;
