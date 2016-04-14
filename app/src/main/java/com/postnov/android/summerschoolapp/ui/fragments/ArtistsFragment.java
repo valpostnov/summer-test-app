@@ -119,7 +119,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
     {
         if (!data.moveToFirst())
         {
-            if (!Utils.checkNetworkConnection(getActivity()))
+            if (!Utils.isNetworkAvailable(getActivity()))
             {
                 setEmptyText(getText(R.string.list_empty));
             }
@@ -178,7 +178,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
 
     private synchronized void runService(boolean wipeCache, int loadedCount)
     {
-        if (Utils.checkNetworkConnection(getActivity()))
+        if (Utils.isNetworkAvailable(getActivity()))
         {
             DBUtils.deleteCache(getActivity(), wipeCache);
             Intent intent = new Intent(getActivity(), LoaderService.class);
