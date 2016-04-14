@@ -176,13 +176,13 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         startActivity(intent, transitionAO.toBundle());
     }
 
-    private synchronized void runService(boolean wipeCache, int loadedCount)
+    private synchronized void runService(boolean wipeCache, int adapterItemCount)
     {
         if (Utils.isNetworkAvailable(getActivity()))
         {
-            DBUtils.deleteCache(getActivity(), wipeCache);
+            DBUtils.wipeCache(getActivity(), wipeCache);
             Intent intent = new Intent(getActivity(), LoaderService.class);
-            intent.putExtra(LOADED_ARTISTS_COUNT, loadedCount);
+            intent.putExtra(LOADED_ARTISTS_COUNT, adapterItemCount);
             getActivity().startService(intent);
         }
         else
