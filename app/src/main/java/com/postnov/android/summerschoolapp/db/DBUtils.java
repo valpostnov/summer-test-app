@@ -33,7 +33,7 @@ public class DBUtils {
     /*
         Проверяем, есть ли записи в кеше
     */
-    public synchronized static boolean cacheIsExist(Context context) {
+    public static boolean cacheIsExist(Context context) {
         boolean hasRows = false;
         Cursor cursor;
         cursor = context.getContentResolver().query(Artist.CONTENT_URI, null, null, null,null);
