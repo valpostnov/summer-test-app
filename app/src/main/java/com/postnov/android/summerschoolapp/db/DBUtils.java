@@ -16,29 +16,30 @@ public class DBUtils {
     /*
         Очищаем некий "кэш" с исполнителями
     */
-    public static int deleteCache(Context context, boolean delete)
+    public static int wipeCache(Context context, boolean wipe)
     {
-        if (delete) return context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
+        if (wipe) return context.getContentResolver().delete(Artist.CONTENT_URI, null, null);
         return -1;
     }
     /*
         Добавляем нового исполнителя
     */
-    public static boolean insertArtist(Context context, ContentValues artist)
+    public static Uri insertArtist(Context context, ContentValues artist)
     {
-        context.getContentResolver().insert(Artist.CONTENT_URI, artist);
-        return true;
+        return context.getContentResolver().insert(Artist.CONTENT_URI, artist);
     }
 
     /*
         Проверяем, есть ли записи в кеше
     */
-    public static boolean cacheIsExist(Context context) {
+    public static boolean cacheIsExist(Context context) 
+    {
         boolean hasRows = false;
         Cursor cursor;
         cursor = context.getContentResolver().query(Artist.CONTENT_URI, null, null, null,null);
 
-        if (cursor != null) {
+        if (cursor != null) 
+        {
             hasRows = cursor.moveToFirst();
             cursor.close();
         }
