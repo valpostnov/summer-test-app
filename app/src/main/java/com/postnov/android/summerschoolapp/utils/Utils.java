@@ -10,7 +10,7 @@ import android.widget.Toast;
  */
 public class Utils {
 
-    public static boolean checkNetworkConnection(Context context)
+    public static boolean isNetworkAvailable(Context context)
     {
         ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeInfo = connMgr.getActiveNetworkInfo();
