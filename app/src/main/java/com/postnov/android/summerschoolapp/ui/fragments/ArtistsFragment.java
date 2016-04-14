@@ -187,7 +187,7 @@ public class ArtistsFragment extends SwipeRefreshListFragment implements LoaderM
         }
         else
         {
-            setRefreshing(false);
+            if (getSwipeRefreshLayout() != null && isRefreshing()) setRefreshing(false);
             Utils.showToast(getActivity(), getString(R.string.no_network_connection));
         }
     }
