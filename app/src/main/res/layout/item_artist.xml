@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_medium">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_medium"
+    android:background="?android:selectableItemBackground">
 
     <ImageView
         android:id="@+id/item_artist_cover"
         android:layout_width="@dimen/small_cover_width"
         android:layout_height="@dimen/small_cover_height"
         android:scaleType="centerCrop"
-        android:transitionName="@string/shared_element"
         />
     <LinearLayout
         android:orientation="vertical"

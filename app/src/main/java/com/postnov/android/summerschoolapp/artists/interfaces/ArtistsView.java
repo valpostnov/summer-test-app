@@ -1,6 +1,6 @@
 package com.postnov.android.summerschoolapp.artists.interfaces;
 
-import com.postnov.android.summerschoolapp.model.ArtistModel;
+import com.postnov.android.summerschoolapp.data.entity.Artist;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface ArtistsView
 {
-    void showArtists(List<ArtistModel> artists);
+    void showArtists(List<Artist> artists, boolean isFistLoad);
     void showProgressView(boolean show);
     void showError(Throwable t);
 }

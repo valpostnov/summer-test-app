@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">SummerSchoolApp</string>
-    <string name="main_activity_name">Исполнители</string>
+    <string name="app_name">Исполнители</string>
 
     <string name="no_network_connection">Нет подключения к интернету</string>
     <string name="list_empty">Список пуст</string>

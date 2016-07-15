@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.postnov.android.summerschoolapp">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -12,31 +11,15 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:label="@string/main_activity_name"
             android:name=".artists.ArtistsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activity.DetailsActivity"
-            android:parentActivityName=".artists.ArtistsActivity">
-
-        </activity>
-
-        <service
-            android:name=".service.LoaderService"
-            android:exported="false" >
-        </service>
-
-        <provider
-            android:name=".provider.ArtistsProvider"
-            android:authorities="com.postnov.android.summerschoolapp"
-            android:exported="false"/>
     </application>
 
 </manifest>

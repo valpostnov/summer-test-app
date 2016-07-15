@@ -1,11 +1,11 @@
-package com.postnov.android.summerschoolapp.model;
+package com.postnov.android.summerschoolapp.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by postnov on 12.04.2016.
  */
-public class CoverModel {
+public class Cover {
     @SerializedName("small")
     private String mCoverSmall;
     @SerializedName("big")
