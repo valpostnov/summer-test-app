@@ -38,7 +38,8 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mPresenter = new ArtistsPresenterImpl(new Repository(new LocalDataSource(), new RemoteDataSource()));
+        mPresenter = new ArtistsPresenterImpl(new Repository(
+                new LocalDataSource(getActivity().getCacheDir()), new RemoteDataSource()));
     }
 
     @Override

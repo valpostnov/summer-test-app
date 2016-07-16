@@ -2,6 +2,7 @@ package com.postnov.android.summerschoolapp.data.source;
 
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -11,6 +12,6 @@ import rx.Observable;
  */
 public interface IDataSource
 {
-    Observable<List<Artist>> getList(int loaded);
-    void save(List<Artist> artists);
+    Observable<ArrayList<Artist>> getList(int loaded);
+    void save(ArrayList<Artist> artists);
 }

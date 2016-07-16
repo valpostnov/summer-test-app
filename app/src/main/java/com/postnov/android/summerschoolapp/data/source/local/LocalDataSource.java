@@ -3,7 +3,13 @@ package com.postnov.android.summerschoolapp.data.source.local;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.data.source.IDataSource;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import rx.Observable;
 
@@ -12,13 +18,44 @@ import rx.Observable;
  */
 public class LocalDataSource implements IDataSource
 {
-    @Override
-    public Observable<List<Artist>> getList(int loaded) {
-        return null;
+    private final File cacheDir;
+    private final String fileName = "artists.list";
+
+    public LocalDataSource(File cacheDir)
+    {
+        this.cacheDir = cacheDir;
     }
 
     @Override
-    public void save(List<Artist> artists) {
+    public Observable<ArrayList<Artist>> getList(int loaded)
+    {
+        File file = new File(cacheDir, fileName);
+        ArrayList<Artist> artists = null;
 
+        try (FileInputStream is = new FileInputStream(file); ObjectInputStream in = new ObjectInputStream(is))
+        {
+            artists = (ArrayList<Artist>) in.readObject();
+        }
+        catch (IOException | ClassNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
+        return Observable.just(artists);
+    }
+
+    @Override
+    public void save(ArrayList<Artist> artists)
+    {
+        File file = new File(cacheDir, fileName);
+
+        try (FileOutputStream os = new FileOutputStream(file); ObjectOutputStream out = new ObjectOutputStream(os))
+        {
+            out.writeObject(artists);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

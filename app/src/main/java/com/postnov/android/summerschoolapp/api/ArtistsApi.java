@@ -2,6 +2,7 @@ package com.postnov.android.summerschoolapp.api;
 
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -16,5 +17,5 @@ import rx.Observable;
 public interface ArtistsApi
 {
     @GET("mobilization-2016/artists.json")
-    Observable<List<Artist>> listArtists();
+    Observable<ArrayList<Artist>> listArtists();
 }

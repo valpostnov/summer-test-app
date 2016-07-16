@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by postnov on 12.04.2016.
@@ -12,16 +13,22 @@ public class Artist implements Serializable
 {
     @SerializedName("id")
     private String mId;
+
     @SerializedName("name")
     private String mName;
+
     @SerializedName("genres")
     private String[] mGenres;
+
     @SerializedName("tracks")
     private String mTracks;
+
     @SerializedName("albums")
     private String mAlbums;
+
     @SerializedName("description")
     private String mDesc;
+
     @SerializedName("cover")
     private Cover mCover;
 

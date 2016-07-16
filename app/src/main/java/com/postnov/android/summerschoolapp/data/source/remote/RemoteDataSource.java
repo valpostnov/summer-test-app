@@ -4,6 +4,7 @@ import com.postnov.android.summerschoolapp.api.ArtistsApi;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.data.source.IDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -32,24 +33,23 @@ public class RemoteDataSource implements IDataSource
     }
 
     @Override
-    public Observable<List<Artist>> getList(final int loaded)
+    public Observable<ArrayList<Artist>> getList(final int loaded)
     {
-        return api.listArtists().map(new Func1<List<Artist>, List<Artist>>()
+        return api.listArtists().map(new Func1<ArrayList<Artist>, ArrayList<Artist>>()
         {
             @Override
-            public List<Artist> call(List<Artist> artists)
+            public ArrayList<Artist> call(ArrayList<Artist> artists)
             {
-                return load(artists, loaded);
+                return new ArrayList<>(load(artists, loaded));
             }
         });
     }
 
     @Override
-    public void save(List<Artist> artists) {}
+    public void save(ArrayList<Artist> artists) {}
 
     private List<Artist> load(List<Artist> list, int loadedEntries)
     {
-
         int allEntries = list.size();
 
         // если записи еще не загружены, загружаем первые 20
