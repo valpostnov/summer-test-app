@@ -1,6 +1,5 @@
 package com.postnov.android.summerschoolapp.artists;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

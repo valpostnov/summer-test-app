@@ -5,12 +5,14 @@
     <string name="list_empty">Список пуст</string>
 
     <string name="action_refresh">Обновить</string>
-    <string name="shared_element">coverSharedElement</string>
-    <string name="download_list">Загрузка...</string>
     <string name="status_unknown">Что-то пошло не так, попробуйте перезапустить приложение.</string>
-    <string name="status_400">400:Bad Request</string>
-    <string name="status_404">404:Not Found</string>
-    <string name="status_503">503:Service Unavailable</string>
-    <string name="status_504">504:Gateway Timeout</string>
     <string name="status_not_entries">Все артисты загружены</string>
+    <string name="app_desc">Тестовое задание для школы Яндекс</string>
+    <string name="app_link">GitHub</string>
+    <string name="about_activity">О приложении</string>
+    <string name="action_support">Обратная связь</string>
+    <string name="email_address">valpostnov@random.io</string>
+    <string name="email_subject">Обращение №</string>
+    <string name="email_body">Версия приложения:</string>
+    <string name="support_chooser_text">Выберите почтовый клиент</string>
 </resources>

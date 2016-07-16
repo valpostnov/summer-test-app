@@ -20,7 +20,6 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:adjustViewBounds="false"
-            android:transitionName="@string/shared_element"
             android:minHeight="300dp" />
         <TextView
             android:id="@+id/detail_genres"

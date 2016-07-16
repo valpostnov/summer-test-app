@@ -15,7 +15,6 @@
         android:scaleType="centerCrop"
         android:layout_weight="1"
         android:layout_margin="@dimen/margin_medium"
-        android:transitionName="@string/shared_element"
         />
 
     <ScrollView
