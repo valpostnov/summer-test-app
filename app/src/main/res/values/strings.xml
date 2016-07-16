@@ -10,9 +10,9 @@
     <string name="app_desc">Тестовое задание для школы Яндекс</string>
     <string name="app_link">GitHub</string>
     <string name="about_activity">О приложении</string>
-    <string name="action_support">Обратная связь</string>
+    <string name="action_feedback">Обратная связь</string>
     <string name="email_address">valpostnov@random.io</string>
-    <string name="email_subject">Обращение №</string>
+    <string name="email_subject">Отзыв о приложении</string>
     <string name="email_body">Версия приложения:</string>
     <string name="support_chooser_text">Выберите почтовый клиент</string>
 </resources>

@@ -12,4 +12,5 @@ import rx.Observable;
 public interface IDataSource
 {
     Observable<List<Artist>> getList(int loaded);
+    void save(List<Artist> artists);
 }

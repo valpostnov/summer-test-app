@@ -25,4 +25,9 @@ public class Repository implements IDataSource
     {
         return remote.getList(loaded);
     }
+
+    @Override
+    public void save(List<Artist> artists) {
+
+    }
 }

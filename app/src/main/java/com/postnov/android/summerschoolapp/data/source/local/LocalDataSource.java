@@ -17,4 +17,8 @@ public class LocalDataSource implements IDataSource
         return null;
     }
 
+    @Override
+    public void save(List<Artist> artists) {
+
+    }
 }

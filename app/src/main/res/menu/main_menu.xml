@@ -8,8 +8,8 @@
         android:showAsAction="never"
         />
     <item
-        android:id="@+id/action_support"
-        android:title="@string/action_support"
+        android:id="@+id/action_feedback"
+        android:title="@string/action_feedback"
         android:orderInCategory="101"
         android:showAsAction="never"
         />

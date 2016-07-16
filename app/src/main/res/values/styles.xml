@@ -6,13 +6,6 @@
         <item name="android:colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorBackground</item>
         <item name="android:windowContentTransitions">true</item>
-
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/list_detail_transition
-        </item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/list_detail_transition
-        </item>
     </style>
 
 </resources>

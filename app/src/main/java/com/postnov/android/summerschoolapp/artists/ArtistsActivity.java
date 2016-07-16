@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,8 +60,8 @@ public class ArtistsActivity extends Activity
                 startActivity(new Intent(this, AboutActivity.class));
                 return true;
 
-            case R.id.action_support:
-                startSupport();
+            case R.id.action_feedback:
+                sendFeedback();
                 return true;
         }
 
@@ -74,18 +75,18 @@ public class ArtistsActivity extends Activity
         return true;
     }
 
-    private void startSupport()
+    private void sendFeedback()
     {
         String recipient = getString(R.string.email_address);
         String subject = getString(R.string.email_subject);
         String body = String.format("%s %s", getString(R.string.email_body), BuildConfig.VERSION_NAME);
 
-        Intent supportIntent = new Intent();
-        supportIntent.setAction(Intent.ACTION_SEND);
-        supportIntent.putExtra(Intent.EXTRA_EMAIL, recipient);
-        supportIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        supportIntent.putExtra(Intent.EXTRA_TEXT, body);
+        Intent feedbackIntent = new Intent();
+        feedbackIntent.setAction(Intent.ACTION_SENDTO);
+        feedbackIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        feedbackIntent.putExtra(Intent.EXTRA_TEXT, body);
+        feedbackIntent.setData(Uri.parse("mailto:" + recipient));
 
-        startActivity(supportIntent);
+        startActivity(Intent.createChooser(feedbackIntent, getString(R.string.support_chooser_text)));
     }
 }

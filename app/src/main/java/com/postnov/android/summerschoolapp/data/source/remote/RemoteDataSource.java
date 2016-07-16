@@ -44,6 +44,9 @@ public class RemoteDataSource implements IDataSource
         });
     }
 
+    @Override
+    public void save(List<Artist> artists) {}
+
     private List<Artist> load(List<Artist> list, int loadedEntries)
     {
 
