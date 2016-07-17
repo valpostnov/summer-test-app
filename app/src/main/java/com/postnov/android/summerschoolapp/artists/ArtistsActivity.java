@@ -36,7 +36,6 @@ public class ArtistsActivity extends Activity
         if (savedInstanceState == null)
         {
             addFragment(ArtistsFragment.newInstance(), false);
-            showNotification(true);
         }
     }
 
@@ -139,19 +138,19 @@ public class ArtistsActivity extends Activity
 
     private PendingIntent getNotificationIntent(String packageName)
     {
-        String musicUrl = "market://details?id=" + packageName;
-        String musicFullUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+        String appUrl = "market://details?id=" + packageName;
+        String appFullUrl = "https://play.google.com/store/apps/details?id=" + packageName;
         String playStorePackage = "com.android.vending";
 
         Intent intent = getPackageManager().getLaunchIntentForPackage(playStorePackage);
 
         if (intent == null)
         {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(musicFullUrl));
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appFullUrl));
         }
         else
         {
-            intent = getPackageManager().getLaunchIntentForPackage(musicUrl);
+            intent = getPackageManager().getLaunchIntentForPackage(appUrl);
         }
 
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
