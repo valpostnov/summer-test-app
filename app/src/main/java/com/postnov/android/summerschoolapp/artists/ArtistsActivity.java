@@ -7,7 +7,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RemoteViews;
 
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
@@ -122,12 +120,11 @@ public class ArtistsActivity extends Activity
         if (show)
         {
             NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this);
-            nBuilder.setSmallIcon(R.mipmap.ic_launcher);
-            nBuilder.setContentTitle(getString(R.string.headset_plug));
-            nBuilder.addAction(R.drawable.ic_music, getString(R.string.action_start_music),
-                    getNotificationIntent("ru.yandex.music"));
-            nBuilder.addAction(R.drawable.ic_radio, getString(R.string.action_start_radio),
-                    getNotificationIntent("ru.yandex.radio"));
+            nBuilder.setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(getString(R.string.headset_plug))
+                    .addAction(R.drawable.ic_music, getString(R.string.action_start_music), getNotifyIntent("ru.yandex.music"))
+                    .addAction(R.drawable.ic_radio, getString(R.string.action_start_radio), getNotifyIntent("ru.yandex.radio"));
+
             notificationManager.notify(notificationId, nBuilder.build());
         }
         else
@@ -136,23 +133,13 @@ public class ArtistsActivity extends Activity
         }
     }
 
-    private PendingIntent getNotificationIntent(String packageName)
+    private PendingIntent getNotifyIntent(String packageName)
     {
-        String appUrl = "market://details?id=" + packageName;
         String appFullUrl = "https://play.google.com/store/apps/details?id=" + packageName;
-        String playStorePackage = "com.android.vending";
 
-        Intent intent = getPackageManager().getLaunchIntentForPackage(playStorePackage);
-
-        if (intent == null)
-        {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appFullUrl));
-        }
-        else
-        {
-            intent = getPackageManager().getLaunchIntentForPackage(appUrl);
-        }
-
+        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+        if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appFullUrl));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
