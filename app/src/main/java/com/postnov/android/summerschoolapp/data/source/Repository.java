@@ -35,10 +35,10 @@ public class Repository implements IDataSource
     }
 
     @Override
-    public Observable<List<Artist>> getList(int loaded)
+    public Observable<List<Artist>> getList(int[] range)
     {
-        if (!cache.isEmpty()) return fromRemote(loaded);
-        return fromLocal(loaded);
+        if (cache.isEmpty()) return fromRemote(range);
+        return fromLocal(range);
     }
 
     @Override
@@ -47,27 +47,35 @@ public class Repository implements IDataSource
         cache.clear();
     }
 
-    private Observable<List<Artist>> fromRemote(int loaded)
+    private Observable<List<Artist>> fromRemote(final int[] range)
     {
-        return remote.getList(loaded).doOnNext(new Action1<List<Artist>>()
+        return remote.getList(range).doOnNext(new Action1<List<Artist>>()
         {
             @Override
             public void call(List<Artist> artists)
             {
                 cache.put(artists);
             }
+
         }).map(new Func1<List<Artist>, List<Artist>>()
         {
             @Override
             public List<Artist> call(List<Artist> artists)
             {
-                return artists.subList(0, 20);
+                return artists.subList(range[0], range[1]);
             }
         });
     }
 
-    private Observable<List<Artist>> fromLocal(int loaded)
+    private Observable<List<Artist>> fromLocal(final int[] range)
     {
-        return Observable.just(cache.get(loaded));
+        return Observable.just(cache.get()).map(new Func1<List<Artist>, List<Artist>>()
+        {
+            @Override
+            public List<Artist> call(List<Artist> artists)
+            {
+                return artists.subList(range[0], range[1]);
+            }
+        });
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface ICache<T>
 {
-    List<T> get(int loaded);
+    List<T> get();
     void put(List<T> list);
     boolean clear();
     boolean isEmpty();

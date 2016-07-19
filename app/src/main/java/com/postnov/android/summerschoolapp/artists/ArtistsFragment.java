@@ -28,7 +28,7 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         ArtistsAdapter.OnItemClickListener, ArtistsAdapter.OnEndlessListener, ArtistsView
 {
     private static final String TAG = "ArtistsFragment";
-    private static final int FIRST = 0;
+    private static int sCachedLoadedArtists = 20;
 
     private ArtistsAdapter mArtistsAdapter;
     private SwipeRefreshLayout mSwipeLayout;
@@ -79,13 +79,14 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     {
         super.onResume();
         mPresenter.bind(this);
-        fetchData(false, FIRST);
+        fetchData(false, 0, sCachedLoadedArtists);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
+        sCachedLoadedArtists = mArtistsAdapter.getItemCount();
         mPresenter.unsubscribe();
         mPresenter.unbind();
     }
@@ -93,7 +94,8 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh()
     {
-        fetchData(true, FIRST);
+        mArtistsAdapter.clear();
+        fetchData(true, 0, 20);
     }
 
     @Override
@@ -104,14 +106,9 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void showArtists(List<Artist> artists, boolean isFistLoad)
+    public void showArtists(List<Artist> artists)
     {
-        if (isFistLoad)
-        {
-            mArtistsAdapter.changeList(artists);
-            return;
-        }
-        mArtistsAdapter.addNext(artists);
+        mArtistsAdapter.changeList(artists);
     }
 
     @Override
@@ -135,9 +132,9 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void loadMore(int count)
+    public void loadMore(int loadedCount)
     {
-        fetchData(false, count);
+        fetchData(false, loadedCount, loadedCount + 20);
     }
 
     private void initViews(View view)
@@ -152,8 +149,9 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    private void fetchData(boolean forceLoad, int loaded)
+    private void fetchData(boolean forceLoad, int from, int to)
     {
-        mPresenter.fetchArtists(forceLoad, loaded);
+        int[] range = {from, to};
+        mPresenter.fetchArtists(forceLoad, range);
     }
 }

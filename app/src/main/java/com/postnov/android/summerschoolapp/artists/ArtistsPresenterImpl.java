@@ -28,13 +28,14 @@ public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
     }
 
     @Override
-    public void fetchArtists(final boolean forceLoad, final int loaded)
+    public void fetchArtists(final boolean forceLoad, final int[] range)
     {
         mArtistsView.showProgressView(true);
 
         if (forceLoad) mRepository.delete();
 
-        mSubscriptions.add(mRepository.getList(loaded)
+        mSubscriptions.add(mRepository.getList(range)
+
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Artist>>()
@@ -55,8 +56,7 @@ public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
                     @Override
                     public void onNext(List<Artist> artists)
                     {
-                        if (loaded == 0) mArtistsView.showArtists(artists, true);
-                        else mArtistsView.showArtists(artists, false);
+                        mArtistsView.showArtists(artists);
                     }
                 }));
     }

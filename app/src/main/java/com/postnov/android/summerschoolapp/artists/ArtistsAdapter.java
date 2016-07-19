@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +40,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     {
         this.mContext = context;
         mEmptyView = emptyView;
+        mArtists = new ArrayList<>();
     }
 
     @Override
@@ -74,16 +76,14 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public void changeList(List<Artist> newList)
     {
-        mArtists = newList;
+        mArtists.addAll(newList);
         notifyDataSetChanged();
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-    public void addNext(List<Artist> nextItems)
+    public void clear()
     {
-        mArtists.addAll(nextItems);
-        notifyDataSetChanged();
-        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mArtists.clear();
     }
 
     public List<Artist> getList()

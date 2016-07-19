@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * Created by postnov on 12.04.2016.
