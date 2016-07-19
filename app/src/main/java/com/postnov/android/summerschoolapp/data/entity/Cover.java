@@ -15,7 +15,7 @@ public class Cover implements Serializable
     @SerializedName("big")
     private String mCoverBig;
 
-    public String getCoverSmall() {
+    public String getSmall() {
         return mCoverSmall;
     }
 

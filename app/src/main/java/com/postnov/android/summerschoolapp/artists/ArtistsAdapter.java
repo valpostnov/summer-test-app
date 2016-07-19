@@ -54,17 +54,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     public void onBindViewHolder(ArtistsViewHolder holder, int position)
     {
         Artist artist = getList().get(position);
-
-        Glide.with(mContext).load(artist.getCover().getCoverSmall())
-                .override(100, 100)
-                .into(holder.cover);
-
-        holder.name.setText(artist.getName());
-        holder.genres.setText(artist.getGenres());
-        holder.albumsAndTracks.setText(artist.getAlbumsAndTracks());
-
-        if (position == getItemCount() - 1)
-        { mOnEndlessListener.loadMore(getItemCount()); }
+        holder.bind(artist);
     }
 
     @Override
@@ -113,6 +103,17 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         {
             int adapterPosition = getAdapterPosition();
             mOnItemClickListener.onItemClick(v, adapterPosition);
+        }
+
+        public void bind(Artist artist)
+        {
+            name.setText(artist.getName());
+            genres.setText(artist.getGenres());
+            albumsAndTracks.setText(artist.getAlbumsAndTracks());
+            Glide.with(mContext).load(artist.getCover().getSmall()).override(100, 100).into(cover);
+
+            if (getAdapterPosition() == getItemCount() - 1)
+            { mOnEndlessListener.loadMore(getItemCount()); }
         }
     }
 
