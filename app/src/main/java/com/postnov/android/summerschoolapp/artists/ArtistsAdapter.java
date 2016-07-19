@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +19,11 @@ import java.util.List;
  */
 public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsViewHolder>
 {
-    private View emptyView;
-    private List<Artist> artists;
-    private OnItemClickListener onItemClickListener;
-    private OnEndlessListener onEndlessListener;
-    private Context context;
+    private View mEmptyView;
+    private List<Artist> mArtists;
+    private OnItemClickListener mOnItemClickListener;
+    private OnEndlessListener mOnEndlessListener;
+    private Context mContext;
 
     public interface OnItemClickListener
     {
@@ -38,14 +37,14 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public ArtistsAdapter(Context context, View emptyView)
     {
-        this.context = context;
-        this.emptyView = emptyView;
+        this.mContext = context;
+        mEmptyView = emptyView;
     }
 
     @Override
     public ArtistsViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View v = LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.item_artist, parent, false);
         return new ArtistsViewHolder(v);
     }
 
@@ -54,7 +53,8 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     {
         Artist artist = getList().get(position);
 
-        Glide.with(context) .load(artist.getCover().getCoverSmall()).override(100, 100)
+        Glide.with(mContext).load(artist.getCover().getCoverSmall())
+                .override(100, 100)
                 .into(holder.cover);
 
         holder.name.setText(artist.getName());
@@ -62,33 +62,33 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         holder.albumsAndTracks.setText(artist.getAlbumsAndTracks());
 
         if (position == getItemCount() - 1)
-        { onEndlessListener.loadMore(getItemCount()); }
+        { mOnEndlessListener.loadMore(getItemCount()); }
     }
 
     @Override
     public int getItemCount()
     {
-        if (null == artists) return 0;
-        return artists.size();
+        if (null == mArtists) return 0;
+        return mArtists.size();
     }
 
     public void changeList(List<Artist> newList)
     {
-        artists = newList;
+        mArtists = newList;
         notifyDataSetChanged();
-        emptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public void addNext(List<Artist> nextItems)
     {
-        artists.addAll(nextItems);
+        mArtists.addAll(nextItems);
         notifyDataSetChanged();
-        emptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public List<Artist> getList()
     {
-        return artists;
+        return mArtists;
     }
 
     public class ArtistsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -112,17 +112,17 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         public void onClick(View v)
         {
             int adapterPosition = getAdapterPosition();
-            onItemClickListener.onItemClick(v, adapterPosition);
+            mOnItemClickListener.onItemClick(v, adapterPosition);
         }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener)
     {
-        onItemClickListener = listener;
+        mOnItemClickListener = listener;
     }
 
     public void setOnEndlessListener(OnEndlessListener listener)
     {
-        onEndlessListener = listener;
+        mOnEndlessListener = listener;
     }
 }

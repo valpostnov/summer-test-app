@@ -19,11 +19,11 @@ import android.view.MenuItem;
 
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.about.AboutActivity;
+import com.postnov.android.summerschoolapp.about.AboutFragment;
 
 public class ArtistsActivity extends Activity
 {
-    private final HeadsetPlugReceiver receiver = new HeadsetPlugReceiver();
+    private final HeadsetPlugReceiver mReceiver = new HeadsetPlugReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,21 +41,22 @@ public class ArtistsActivity extends Activity
     protected void onResume()
     {
         super.onResume();
-        registerReceiver(receiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
     }
 
     @Override
     protected void onPause()
     {
         super.onPause();
-        unregisterReceiver(receiver);
+        unregisterReceiver(mReceiver);
+        showNotification(false);
     }
 
     public void addFragment(Fragment fragment, boolean addToBackStack)
     {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.content_fragment, fragment);
+        transaction.replace(R.id.content_fragment, fragment);
         if (addToBackStack) transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
@@ -75,11 +76,10 @@ public class ArtistsActivity extends Activity
         {
             case android.R.id.home:
                 onBackPressed();
-                setupActionBar(getString(R.string.app_name), false);
                 return true;
 
             case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
+                addFragment(AboutFragment.newInstance(), true);
                 return true;
 
             case R.id.action_feedback:
@@ -115,31 +115,37 @@ public class ArtistsActivity extends Activity
     private void showNotification(boolean show)
     {
         int notificationId = 1;
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (show)
         {
-            NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this);
-            nBuilder.setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(getString(R.string.headset_plug))
-                    .addAction(R.drawable.ic_music, getString(R.string.action_start_music), getNotifyIntent("ru.yandex.music"))
-                    .addAction(R.drawable.ic_radio, getString(R.string.action_start_radio), getNotifyIntent("ru.yandex.radio"));
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
 
-            notificationManager.notify(notificationId, nBuilder.build());
+            notification.setSmallIcon(R.mipmap.ic_launcher);
+            notification.setContentTitle(getString(R.string.headset_plug));
+            notification.addAction(R.drawable.ic_music, getString(R.string.music), createPendingIntent("ru.yandex.music"));
+            notification.addAction(R.drawable.ic_radio, getString(R.string.radio), createPendingIntent("ru.yandex.radio"));
+
+            notifyManager.notify(notificationId, notification.build());
+            return;
         }
-        else
-        {
-            notificationManager.cancel(notificationId);
-        }
+
+        notifyManager.cancel(notificationId);
     }
 
-    private PendingIntent getNotifyIntent(String packageName)
+    private PendingIntent createPendingIntent(String packageName)
     {
-        String appFullUrl = "https://play.google.com/store/apps/details?id=" + packageName;
+        String appUrl = getString(R.string.play_link) + packageName;
 
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-        if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appFullUrl));
+
+        if (intent == null)
+        {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appUrl));
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
         return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 

@@ -4,7 +4,6 @@
     android:id="@+id/port_scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.postnov.android.summerschoolapp.ui.activity.DetailsActivity"
     android:fillViewport="true">
 
     <LinearLayout
@@ -12,7 +11,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:background="@android:color/background_light">
 
         <ImageView
             android:id="@+id/detail_cover"

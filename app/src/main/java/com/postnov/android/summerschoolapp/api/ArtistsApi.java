@@ -17,5 +17,5 @@ import rx.Observable;
 public interface ArtistsApi
 {
     @GET("mobilization-2016/artists.json")
-    Observable<ArrayList<Artist>> listArtists();
+    Observable<List<Artist>> listArtists();
 }

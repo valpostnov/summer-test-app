@@ -33,47 +33,11 @@ public class RemoteDataSource implements IDataSource
     }
 
     @Override
-    public Observable<ArrayList<Artist>> getList(final int loaded)
+    public Observable<List<Artist>> getList(int loaded)
     {
-        return api.listArtists().map(new Func1<ArrayList<Artist>, ArrayList<Artist>>()
-        {
-            @Override
-            public ArrayList<Artist> call(ArrayList<Artist> artists)
-            {
-                return new ArrayList<>(load(artists, loaded));
-            }
-        });
+        return api.listArtists();
     }
 
     @Override
-    public void save(ArrayList<Artist> artists) {}
-
-    private List<Artist> load(List<Artist> list, int loadedEntries)
-    {
-        int allEntries = list.size();
-
-        // если записи еще не загружены, загружаем первые 20
-        if (loadedEntries == 0)
-        {
-            return list.subList(0, 20);
-        }
-
-        // если загруженных записей меньше чем всех записей
-        if (loadedEntries < allEntries)
-        {
-            // если записей, которых осталось загрузить  <= 20
-            if (allEntries - loadedEntries <= 20)
-            {
-                // то грузим оставшиеся
-                return list.subList(loadedEntries, loadedEntries + (allEntries - loadedEntries));
-            }
-            else
-            {
-                // иначе грузим следующие 20 записей
-                return list.subList(loadedEntries, loadedEntries + 20);
-            }
-        }
-
-        return list.subList(0, 0);
-    }
+    public void delete() {}
 }

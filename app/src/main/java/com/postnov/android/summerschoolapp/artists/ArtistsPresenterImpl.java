@@ -17,21 +17,24 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
 {
-    private ArtistsView artistsView;
-    private CompositeSubscription subscriptions;
-    private IDataSource repository;
+    private ArtistsView mArtistsView;
+    private CompositeSubscription mSubscriptions;
+    private IDataSource mRepository;
 
     public ArtistsPresenterImpl(IDataSource repository)
     {
-        this.repository = repository;
-        subscriptions = new CompositeSubscription();
+        mRepository = repository;
+        mSubscriptions = new CompositeSubscription();
     }
 
     @Override
-    public void fetchArtists(final int loaded)
+    public void fetchArtists(final boolean forceLoad, final int loaded)
     {
-        artistsView.showProgressView(true);
-        subscriptions.add(repository.getList(loaded)
+        mArtistsView.showProgressView(true);
+
+        if (forceLoad) mRepository.delete();
+
+        mSubscriptions.add(mRepository.getList(loaded)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Artist>>()
@@ -39,21 +42,21 @@ public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
                     @Override
                     public void onCompleted()
                     {
-                        artistsView.showProgressView(false);
+                        mArtistsView.showProgressView(false);
                     }
 
                     @Override
                     public void onError(Throwable e)
                     {
-                        artistsView.showProgressView(false);
-                        artistsView.showError(e);
+                        mArtistsView.showProgressView(false);
+                        mArtistsView.showError(e);
                     }
 
                     @Override
                     public void onNext(List<Artist> artists)
                     {
-                        if (loaded == 0) artistsView.showArtists(artists, true);
-                        else artistsView.showArtists(artists, false);
+                        if (loaded == 0) mArtistsView.showArtists(artists, true);
+                        else mArtistsView.showArtists(artists, false);
                     }
                 }));
     }
@@ -61,19 +64,19 @@ public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
     @Override
     public void bind(ArtistsView view)
     {
-        this.artistsView = view;
+        this.mArtistsView = view;
     }
 
     @Override
     public void unbind()
     {
-        artistsView.showProgressView(false);
-        artistsView = null;
+        mArtistsView.showProgressView(false);
+        mArtistsView = null;
     }
 
     @Override
     public void unsubscribe()
     {
-        subscriptions.clear();
+        mSubscriptions.clear();
     }
 }
