@@ -65,8 +65,8 @@ public class DetailsFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
 
         Artist artist = (Artist) getArguments().getSerializable(ARTIST_OBJECT);
-        String albums = getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums());
-        String tracks = getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks());
+        String albums = getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums(), artist.getAlbums());
+        String tracks = getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks(), artist.getTracks());
 
         ((ArtistsActivity) getActivity()).setupActionBar(artist.getName(), true);
 

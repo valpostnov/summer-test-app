@@ -131,14 +131,7 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void showProgressView(final boolean show)
     {
-        mSwipeLayout.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mSwipeLayout.setRefreshing(show);
-            }
-        });
+        mSwipeLayout.setRefreshing(show);
     }
 
     @Override
