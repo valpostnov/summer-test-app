@@ -14,12 +14,16 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.text.TextUtilsCompat;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.util.Util;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.about.AboutFragment;
+import com.postnov.android.summerschoolapp.utils.Utils;
 
 public class ArtistsActivity extends Activity
 {
@@ -99,15 +103,15 @@ public class ArtistsActivity extends Activity
 
     private void sendFeedback()
     {
-        String recipient = getString(R.string.email_address);
         String subject = getString(R.string.email_subject);
-        String body = String.format("%s %s", getString(R.string.email_body), BuildConfig.VERSION_NAME);
+        String body = Utils.concatStrings(getString(R.string.version), BuildConfig.VERSION_NAME);
+        String recipient = Utils.concatStrings("mailto:", getString(R.string.email_address));
 
         Intent feedbackIntent = new Intent();
         feedbackIntent.setAction(Intent.ACTION_SENDTO);
         feedbackIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         feedbackIntent.putExtra(Intent.EXTRA_TEXT, body);
-        feedbackIntent.setData(Uri.parse("mailto:" + recipient));
+        feedbackIntent.setData(Uri.parse(recipient));
 
         startActivity(Intent.createChooser(feedbackIntent, getString(R.string.support_chooser_text)));
     }
@@ -120,29 +124,24 @@ public class ArtistsActivity extends Activity
         if (show)
         {
             NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
-
             notification.setSmallIcon(R.mipmap.ic_launcher);
             notification.setContentTitle(getString(R.string.headset_plug));
             notification.addAction(R.drawable.ic_music, getString(R.string.music), createPendingIntent("ru.yandex.music"));
             notification.addAction(R.drawable.ic_radio, getString(R.string.radio), createPendingIntent("ru.yandex.radio"));
-
             notifyManager.notify(notificationId, notification.build());
-            return;
         }
-
-        notifyManager.cancel(notificationId);
+        else
+        {
+            notifyManager.cancel(notificationId);
+        }
     }
 
     private PendingIntent createPendingIntent(String packageName)
     {
         String appUrl = getString(R.string.play_link) + packageName;
-
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
 
-        if (intent == null)
-        {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appUrl));
-        }
+        if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appUrl));
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 

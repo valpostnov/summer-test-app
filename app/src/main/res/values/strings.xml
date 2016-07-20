@@ -8,7 +8,6 @@
     <string name="status_unknown">Что-то пошло не так, попробуйте перезапустить приложение.</string>
     <string name="status_not_entries">Все артисты загружены</string>
     <string name="app_desc">Тестовое задание для школы Яндекс</string>
-    <string name="app_link">GitHub</string>
     <string name="about_fragmnet">О приложении</string>
     <string name="action_feedback">Обратная связь</string>
     <string name="email_address">valpostnov@random.io</string>
@@ -19,8 +18,25 @@
     <string name="radio">Радио</string>
     <string name="headset_plug">Наушники подключены</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="version">Версия:</string>
     <string name="play_link">https://play.google.com/store/apps/details?id=</string>
+
+    <plurals name="numberOfTracks">
+        <item quantity="zero">нет песен</item>
+        <item quantity="one">%d песня</item>
+        <item quantity="two">%d песни</item>
+        <item quantity="few">%d песни</item>
+        <item quantity="many">%d песен</item>
+        <item quantity="other">%d песен</item>
+    </plurals>
+
+    <plurals name="numberOfAlbums">
+        <item quantity="zero">нет альбомов</item>
+        <item quantity="one">%d альбом</item>
+        <item quantity="two">%d альбома</item>
+        <item quantity="few">%d альбома</item>
+        <item quantity="many">%d альбомов</item>
+        <item quantity="other">%d альбомов</item>
+    </plurals>
 </resources>

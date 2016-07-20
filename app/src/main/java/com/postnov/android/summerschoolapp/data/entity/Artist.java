@@ -20,10 +20,10 @@ public class Artist implements Serializable
     private String[] mGenres;
 
     @SerializedName("tracks")
-    private String mTracks;
+    private int mTracks;
 
     @SerializedName("albums")
-    private String mAlbums;
+    private int mAlbums;
 
     @SerializedName("description")
     private String mDesc;
@@ -64,11 +64,11 @@ public class Artist implements Serializable
         return genres.toString();
     }
 
-    public String getTracks() {
+    public int getTracks() {
         return mTracks;
     }
 
-    public String getAlbums() {
+    public int getAlbums() {
         return mAlbums;
     }
 
@@ -78,16 +78,6 @@ public class Artist implements Serializable
 
     public Cover getCover() {
         return mCover;
-    }
-
-    public String getAlbumsAndTracks()
-    {
-        StringBuilder albumsAndTracks = new StringBuilder();
-        albumsAndTracks.append(Utils.getCorrectAlbumString(mAlbums));
-        albumsAndTracks.append(", ");
-        albumsAndTracks.append(Utils.getCorrectTrackString(mTracks));
-
-        return albumsAndTracks.toString();
     }
 
     public static Builder Builder()
@@ -113,12 +103,12 @@ public class Artist implements Serializable
             return this;
         }
 
-        public Builder setTracks(String tracks) {
+        public Builder setTracks(int tracks) {
             mTracks = tracks;
             return this;
         }
 
-        public Builder setAlbums(String albums) {
+        public Builder setAlbums(int albums) {
             mAlbums = albums;
             return this;
         }

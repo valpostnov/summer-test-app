@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="numberOfTracks">
+        <item quantity="zero">нет песен</item>
+        <item quantity="one">%d песня</item>
+        <item quantity="two">%d песни</item>
+        <item quantity="few">%d песни</item>
+        <item quantity="many">%d песен</item>
+        <item quantity="other">%d песен</item>
+    </plurals>
+
+    <plurals name="numberOfAlbums">
+        <item quantity="zero">нет альбомов</item>
+        <item quantity="one">%d альбом</item>
+        <item quantity="two">%d альбома</item>
+        <item quantity="few">%d альбома</item>
+        <item quantity="many">%d альбомов</item>
+        <item quantity="other">%d альбомов</item>
+    </plurals>
+</resources>

@@ -24,17 +24,25 @@ import com.postnov.android.summerschoolapp.utils.Utils;
 import java.io.File;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,
         ArtistsAdapter.OnItemClickListener, ArtistsAdapter.OnEndlessListener, ArtistsView
 {
     private static final String TAG = "ArtistsFragment";
+    private static final int TO = 20;
+    private static final int FROM = 0;
     private static int sCachedLoadedArtists = 20;
 
+    @BindView(R.id.swipe_view) SwipeRefreshLayout mSwipeLayout;
+    @BindView(R.id.recyclerview_artist) RecyclerView mRecyclerView;
+    @BindView(R.id.artist_emptyview) View mEmptyView;
+
     private ArtistsAdapter mArtistsAdapter;
-    private SwipeRefreshLayout mSwipeLayout;
     private ArtistsPresenter mPresenter;
-    private RecyclerView mRecyclerView;
-    private View mEmptyView;
+    private Unbinder unbinder;
 
     public static ArtistsFragment newInstance()
     {
@@ -57,10 +65,9 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_artists, container, false);
-        initViews(rootView);
-
-        return rootView;
+        View view = inflater.inflate(R.layout.fragment_artists, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -68,10 +75,20 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     {
         super.onViewCreated(view, savedInstanceState);
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mArtistsAdapter = new ArtistsAdapter(getActivity(), mEmptyView);
         mArtistsAdapter.setOnItemClickListener(this);
         mArtistsAdapter.setOnEndlessListener(this);
+        mSwipeLayout.setOnRefreshListener(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mArtistsAdapter);
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -79,7 +96,7 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     {
         super.onResume();
         mPresenter.bind(this);
-        fetchData(false, 0, sCachedLoadedArtists);
+        fetchData(false, FROM, sCachedLoadedArtists);
     }
 
     @Override
@@ -95,7 +112,7 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onRefresh()
     {
         mArtistsAdapter.clear();
-        fetchData(true, 0, 20);
+        fetchData(true, FROM, TO);
     }
 
     @Override
@@ -134,19 +151,7 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void loadMore(int loadedCount)
     {
-        fetchData(false, loadedCount, loadedCount + 20);
-    }
-
-    private void initViews(View view)
-    {
-        mEmptyView = view.findViewById(R.id.artist_emptyview);
-        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_view);
-        mSwipeLayout.setOnRefreshListener(this);
-
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview_artist);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        fetchData(false, loadedCount, loadedCount + TO);
     }
 
     private void fetchData(boolean forceLoad, int from, int to)

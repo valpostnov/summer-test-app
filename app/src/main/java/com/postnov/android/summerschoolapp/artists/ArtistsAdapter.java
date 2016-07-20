@@ -11,9 +11,13 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
+import com.postnov.android.summerschoolapp.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by postnov on 14.04.2016.
@@ -38,7 +42,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public ArtistsAdapter(Context context, View emptyView)
     {
-        this.mContext = context;
+        mContext = context;
         mEmptyView = emptyView;
         mArtists = new ArrayList<>();
     }
@@ -83,18 +87,15 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public class ArtistsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
-        public final ImageView cover;
-        public final TextView name;
-        public final TextView genres;
-        public final TextView albumsAndTracks;
+        @BindView(R.id.item_artist_cover) ImageView artistImage;
+        @BindView(R.id.item_artist_name) TextView artistName;
+        @BindView(R.id.item_artist_genres) TextView artistGenre;
+        @BindView(R.id.item_artist_albums_songs) TextView albumsAndTracks;
 
         public ArtistsViewHolder(View view)
         {
             super(view);
-            cover = (ImageView) view.findViewById(R.id.item_artist_cover);
-            name = (TextView) view.findViewById(R.id.item_artist_name);
-            genres = (TextView) view.findViewById(R.id.item_artist_genres);
-            albumsAndTracks = (TextView) view.findViewById(R.id.item_artist_albums_songs);
+            ButterKnife.bind(this, view);
             view.setOnClickListener(this);
         }
 
@@ -107,10 +108,18 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
         public void bind(Artist artist)
         {
-            name.setText(artist.getName());
-            genres.setText(artist.getGenres());
-            albumsAndTracks.setText(artist.getAlbumsAndTracks());
-            Glide.with(mContext).load(artist.getCover().getSmall()).override(100, 100).into(cover);
+            String albums = mContext.getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums(), artist.getAlbums());
+            String tracks = mContext.getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks(), artist.getTracks());
+            String imageUrl = artist.getCover().getSmall();
+
+            artistName.setText(artist.getName());
+            artistGenre.setText(artist.getGenres());
+            albumsAndTracks.setText(Utils.concatStrings(tracks, ", ", albums));
+
+            Glide.with(mContext)
+                    .load(imageUrl)
+                    .override(100, 100)
+                    .into(artistImage);
 
             if (getAdapterPosition() == getItemCount() - 1)
             { mOnEndlessListener.loadMore(getItemCount()); }

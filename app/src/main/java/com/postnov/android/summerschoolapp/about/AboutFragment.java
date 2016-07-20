@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.util.Util;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.artists.ArtistsActivity;
+import com.postnov.android.summerschoolapp.utils.Utils;
 
 public class AboutFragment extends Fragment
 {
@@ -32,7 +34,8 @@ public class AboutFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_about, container, false);
         TextView version = (TextView) view.findViewById(R.id.app_version);
-        version.setText(String.format("%s %s", getString(R.string.version), BuildConfig.VERSION_NAME));
+        version.setText(Utils.concatStrings(getString(R.string.version), BuildConfig.VERSION_NAME));
+
         return view;
     }
 }
