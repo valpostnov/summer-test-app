@@ -16,19 +16,20 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/small_cover_height">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/item_artist_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="Name "
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
             style="@android:style/TextAppearance.Material.Large"
-            android:maxLines="2"
-            android:fontFamily="sans-serif-condensed"/>
+            android:fontFamily="sans-serif-condensed"
+            android:singleLine="true"
+            android:layout_marginBottom="@dimen/margin_medium" />
 
         <TextView
             android:id="@+id/item_artist_genres"
@@ -43,7 +44,7 @@
         <TextView
             android:id="@+id/item_artist_albums_songs"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="albums, songs"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
