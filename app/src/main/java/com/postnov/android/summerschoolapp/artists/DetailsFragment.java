@@ -71,7 +71,7 @@ public class DetailsFragment extends Fragment
         ((ArtistsActivity) getActivity()).setupActionBar(artist.getName(), true);
 
         mGenresTextView.setText(artist.getGenres());
-        mAlbumsTracksTextView.setText(Utils.concatStrings(tracks,", " , albums));
+        mAlbumsTracksTextView.setText(Utils.concatStrings(tracks, ", " , albums));
         mDescTextView.setText(artist.getDesc());
 
         Glide.with(this).load(artist.getCover().getCoverBig()).fitCenter().into(mCoverImageView);
@@ -81,6 +81,9 @@ public class DetailsFragment extends Fragment
     public void onDestroyView()
     {
         super.onDestroyView();
-        unbinder.unbind();
+        if (unbinder != null)
+        {
+            unbinder.unbind();
+        }
     }
 }

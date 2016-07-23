@@ -88,7 +88,10 @@ public class ArtistsFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onDestroyView()
     {
         super.onDestroyView();
-        unbinder.unbind();
+        if (unbinder != null)
+        {
+            unbinder.unbind();
+        }
     }
 
     @Override

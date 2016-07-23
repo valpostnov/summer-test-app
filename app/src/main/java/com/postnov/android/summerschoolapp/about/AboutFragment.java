@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.util.Util;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.artists.ArtistsActivity;
@@ -26,7 +25,7 @@ public class AboutFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        ((ArtistsActivity) getActivity()).setupActionBar(getString(R.string.about_fragmnet), true);
+        ((ArtistsActivity) getActivity()).setupActionBar(getString(R.string.about_fragment), true);
     }
 
     @Override

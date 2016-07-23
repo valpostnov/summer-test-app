@@ -3,6 +3,7 @@ package com.postnov.android.summerschoolapp.data.source;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.data.source.local.ICache;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -14,10 +15,13 @@ import rx.functions.Func1;
  */
 public class Repository implements IDataSource
 {
+    private static Repository sRepository;
+
+    private static final int FROM = 0;
+    private static final int TO = 1;
+
     private ICache<Artist> cache;
     private IDataSource remote;
-
-    private static Repository sRepository;
 
     public static Repository getInstance(ICache<Artist> cache, IDataSource remote)
     {
@@ -62,7 +66,7 @@ public class Repository implements IDataSource
             @Override
             public List<Artist> call(List<Artist> artists)
             {
-                return artists.subList(range[0], range[1]);
+                return artists.subList(range[FROM], range[TO]);
             }
         });
     }
@@ -74,7 +78,7 @@ public class Repository implements IDataSource
             @Override
             public List<Artist> call(List<Artist> artists)
             {
-                return artists.subList(range[0], range[1]);
+                return artists.subList(range[FROM], range[TO]);
             }
         });
     }

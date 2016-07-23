@@ -5,29 +5,24 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.text.TextUtilsCompat;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.bumptech.glide.util.Util;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.about.AboutFragment;
+import com.postnov.android.summerschoolapp.feature.YaService;
+import com.postnov.android.summerschoolapp.other.SettingsFragment;
+import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
+
+import static com.postnov.android.summerschoolapp.utils.PreferencesManager.*;
 
 public class ArtistsActivity extends Activity
 {
-    private final HeadsetPlugReceiver mReceiver = new HeadsetPlugReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,21 +34,14 @@ public class ArtistsActivity extends Activity
         {
             addFragment(ArtistsFragment.newInstance(), false);
         }
-    }
 
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-        registerReceiver(mReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
-    }
+        PreferencesManager mPreferencesManager = new PreferencesManager(getApplicationContext());
 
-    @Override
-    protected void onPause()
-    {
-        super.onPause();
-        unregisterReceiver(mReceiver);
-        showNotification(false);
+        if (mPreferencesManager.getBoolean(HEADSET_FEATURE_STATE)
+                && !mPreferencesManager.getBoolean(YA_SERVICE_RUNNING_STATE))
+        {
+            startService(new Intent(this, YaService.class));
+        }
     }
 
     public void addFragment(Fragment fragment, boolean addToBackStack)
@@ -89,6 +77,10 @@ public class ArtistsActivity extends Activity
             case R.id.action_feedback:
                 sendFeedback();
                 return true;
+
+            case R.id.action_settings:
+                addFragment(SettingsFragment.newInstance(), true);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -114,60 +106,5 @@ public class ArtistsActivity extends Activity
         feedbackIntent.setData(Uri.parse(recipient));
 
         startActivity(Intent.createChooser(feedbackIntent, getString(R.string.support_chooser_text)));
-    }
-
-    private void showNotification(boolean show)
-    {
-        int notificationId = 1;
-        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (show)
-        {
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
-            notification.setSmallIcon(R.mipmap.ic_launcher);
-            notification.setContentTitle(getString(R.string.headset_plug));
-            notification.addAction(R.drawable.ic_music, getString(R.string.music), createPendingIntent("ru.yandex.music"));
-            notification.addAction(R.drawable.ic_radio, getString(R.string.radio), createPendingIntent("ru.yandex.radio"));
-            notifyManager.notify(notificationId, notification.build());
-        }
-        else
-        {
-            notifyManager.cancel(notificationId);
-        }
-    }
-
-    private PendingIntent createPendingIntent(String packageName)
-    {
-        String appUrl = getString(R.string.play_link) + packageName;
-        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-
-        if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appUrl));
-
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-        return PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private class HeadsetPlugReceiver extends BroadcastReceiver
-    {
-        private static final int STATE_UNPLUG = 0;
-        private static final int STATE_PLUG = 1;
-        private static final String EXTRA_STATE = "state";
-
-        @Override
-        public void onReceive(Context context, Intent intent)
-        {
-            int state = intent.getExtras().getInt(EXTRA_STATE);
-            switch (state)
-            {
-                case STATE_PLUG:
-                    showNotification(true);
-                    break;
-
-                case STATE_UNPLUG:
-                    showNotification(false);
-                    break;
-            }
-        }
     }
 }

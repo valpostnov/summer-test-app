@@ -23,13 +23,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Name "
-            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
             style="@android:style/TextAppearance.Material.Large"
             android:fontFamily="sans-serif-condensed"
             android:singleLine="true"
-            android:layout_marginBottom="@dimen/margin_medium" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/item_artist_genres"
@@ -39,7 +39,8 @@
             android:layout_marginLeft="@dimen/margin_medium"
             android:layout_marginRight="@dimen/margin_medium"
             android:singleLine="true"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/item_artist_albums_songs"

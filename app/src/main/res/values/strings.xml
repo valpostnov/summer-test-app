@@ -4,20 +4,15 @@
     <string name="no_network_connection">Нет подключения к интернету</string>
     <string name="list_empty">Список пуст</string>
 
-    <string name="action_refresh">Обновить</string>
     <string name="status_unknown">Что-то пошло не так, попробуйте перезапустить приложение.</string>
     <string name="status_not_entries">Все артисты загружены</string>
     <string name="app_desc">Тестовое задание для школы Яндекс</string>
-    <string name="about_fragmnet">О приложении</string>
-    <string name="action_feedback">Обратная связь</string>
+    <string name="about_fragment">О приложении</string>
+
     <string name="email_address">valpostnov@random.io</string>
     <string name="email_subject">Отзыв о приложении</string>
     <string name="email_body">Версия приложения:</string>
     <string name="support_chooser_text">Выберите почтовый клиент</string>
-    <string name="music">Музыка</string>
-    <string name="radio">Радио</string>
-    <string name="headset_plug">Наушники подключены</string>
-
 
     <string name="version">Версия:</string>
     <string name="play_link">https://play.google.com/store/apps/details?id=</string>
@@ -39,4 +34,14 @@
         <item quantity="many">%d альбомов</item>
         <item quantity="other">%d альбомов</item>
     </plurals>
+
+    <string name="setting_ads">Показывать рекламу при подключении наушников</string>
+    <string name="music">Музыка</string>
+    <string name="radio">Радио</string>
+    <string name="headset_plug">Наушники подключены</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="action_refresh">Обновить</string>
+    <string name="action_feedback">Обратная связь</string>
+
 </resources>
