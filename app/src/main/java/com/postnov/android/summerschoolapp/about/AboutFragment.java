@@ -1,21 +1,18 @@
 package com.postnov.android.summerschoolapp.about;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.artists.ArtistsActivity;
+import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
+import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
-public class AboutFragment extends Fragment
+public class AboutFragment extends BaseFragment
 {
-    public AboutFragment() {}
-
     public static AboutFragment newInstance()
     {
         return new AboutFragment();
@@ -25,16 +22,21 @@ public class AboutFragment extends Fragment
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        ((ArtistsActivity) getActivity()).setupActionBar(getString(R.string.about_fragment), true);
+        ToolbarProvider toolbarProvider = getToolbarProvider();
+        if (toolbarProvider != null) toolbarProvider.updateToolbar(getString(R.string.about_fragment), true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle)
+    protected int getLayout()
     {
-        View view = inflater.inflate(R.layout.fragment_about, container, false);
+        return R.layout.fragment_about;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
         TextView version = (TextView) view.findViewById(R.id.app_version);
         version.setText(Utils.concatStrings(getString(R.string.version), BuildConfig.VERSION_NAME));
-
-        return view;
     }
 }

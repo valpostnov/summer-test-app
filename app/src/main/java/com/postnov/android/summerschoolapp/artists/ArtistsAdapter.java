@@ -24,11 +24,10 @@ import butterknife.ButterKnife;
  */
 public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsViewHolder>
 {
-    private View mEmptyView;
-    private List<Artist> mArtists;
-    private OnItemClickListener mOnItemClickListener;
-    private OnEndlessListener mOnEndlessListener;
-    private Context mContext;
+    private List<Artist> artists;
+    private OnItemClickListener onItemClickListener;
+    private OnEndlessListener onEndlessListener;
+    private Context context;
 
     public interface OnItemClickListener
     {
@@ -40,17 +39,16 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         void loadMore(int count);
     }
 
-    public ArtistsAdapter(Context context, View emptyView)
+    public ArtistsAdapter(Context context)
     {
-        mContext = context;
-        mEmptyView = emptyView;
-        mArtists = new ArrayList<>();
+        this.context = context;
+        artists = new ArrayList<>();
     }
 
     @Override
     public ArtistsViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View v = LayoutInflater.from(mContext).inflate(R.layout.item_artist, parent, false);
+        View v = LayoutInflater.from(context).inflate(R.layout.item_artist, parent, false);
         return new ArtistsViewHolder(v);
     }
 
@@ -64,25 +62,24 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
     @Override
     public int getItemCount()
     {
-        if (null == mArtists) return 0;
-        return mArtists.size();
+        if (null == artists) return 0;
+        return artists.size();
     }
 
     public void changeList(List<Artist> newList)
     {
-        mArtists.addAll(newList);
+        artists.addAll(newList);
         notifyDataSetChanged();
-        mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     public void clear()
     {
-        mArtists.clear();
+        artists.clear();
     }
 
     public List<Artist> getList()
     {
-        return mArtists;
+        return artists;
     }
 
     public class ArtistsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
@@ -103,36 +100,44 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         public void onClick(View v)
         {
             int adapterPosition = getAdapterPosition();
-            mOnItemClickListener.onItemClick(v, adapterPosition);
+            onItemClickListener.onItemClick(v, adapterPosition);
         }
 
         public void bind(Artist artist)
         {
-            String albums = mContext.getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums(), artist.getAlbums());
-            String tracks = mContext.getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks(), artist.getTracks());
+            String albums = context.getResources().getQuantityString(
+                    R.plurals.numberOfAlbums,
+                    artist.getAlbums(),
+                    artist.getAlbums());
+
+            String tracks = context.getResources().getQuantityString(
+                    R.plurals.numberOfTracks,
+                    artist.getTracks(),
+                    artist.getTracks());
+
             String imageUrl = artist.getCover().getSmall();
 
             artistName.setText(artist.getName());
             artistGenre.setText(artist.getGenres());
             albumsAndTracks.setText(Utils.concatStrings(tracks, ", ", albums));
 
-            Glide.with(mContext)
+            Glide.with(context)
                     .load(imageUrl)
                     .override(100, 100)
                     .into(artistImage);
 
             if (getAdapterPosition() == getItemCount() - 1)
-            { mOnEndlessListener.loadMore(getItemCount()); }
+            { onEndlessListener.loadMore(getItemCount()); }
         }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener)
     {
-        mOnItemClickListener = listener;
+        onItemClickListener = listener;
     }
 
     public void setOnEndlessListener(OnEndlessListener listener)
     {
-        mOnEndlessListener = listener;
+        onEndlessListener = listener;
     }
 }

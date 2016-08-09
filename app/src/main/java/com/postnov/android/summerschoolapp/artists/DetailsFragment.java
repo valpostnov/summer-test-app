@@ -1,36 +1,30 @@
 package com.postnov.android.summerschoolapp.artists;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.postnov.android.summerschoolapp.R;
+import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
+import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by postnov on 25.03.2016.
  */
-public class DetailsFragment extends Fragment
+public class DetailsFragment extends BaseFragment
 {
     public static final String ARTIST_OBJECT = "com.postnov.summer.artist";
 
-    @BindView(R.id.detail_cover) ImageView mCoverImageView;
-    @BindView(R.id.detail_genres) TextView mGenresTextView;
-    @BindView(R.id.detail_albums_songs) TextView mAlbumsTracksTextView;
-    @BindView(R.id.detail_desc) TextView mDescTextView;
-
-    private Unbinder unbinder;
+    @BindView(R.id.detail_cover) ImageView coverImageView;
+    @BindView(R.id.detail_genres) TextView genresTextView;
+    @BindView(R.id.detail_albums_songs) TextView albumsTracksTextView;
+    @BindView(R.id.detail_desc) TextView descTextView;
 
     public DetailsFragment() {}
 
@@ -50,13 +44,10 @@ public class DetailsFragment extends Fragment
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle)
+    protected int getLayout()
     {
-        View view = inflater.inflate(R.layout.fragment_details, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
+        return R.layout.fragment_details;
     }
 
     @Override
@@ -68,22 +59,13 @@ public class DetailsFragment extends Fragment
         String albums = getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums(), artist.getAlbums());
         String tracks = getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks(), artist.getTracks());
 
-        ((ArtistsActivity) getActivity()).setupActionBar(artist.getName(), true);
+        ToolbarProvider toolbarProvider = getToolbarProvider();
+        if (toolbarProvider != null) toolbarProvider.updateToolbar(artist.getName(), true);
 
-        mGenresTextView.setText(artist.getGenres());
-        mAlbumsTracksTextView.setText(Utils.concatStrings(tracks, ", " , albums));
-        mDescTextView.setText(artist.getDesc());
+        genresTextView.setText(artist.getGenres());
+        albumsTracksTextView.setText(Utils.concatStrings(tracks, ", " , albums));
+        descTextView.setText(artist.getDesc());
 
-        Glide.with(this).load(artist.getCover().getCoverBig()).fitCenter().into(mCoverImageView);
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-        if (unbinder != null)
-        {
-            unbinder.unbind();
-        }
+        Glide.with(this).load(artist.getCover().getCoverBig()).fitCenter().into(coverImageView);
     }
 }

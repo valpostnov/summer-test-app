@@ -6,36 +6,49 @@ import android.content.SharedPreferences;
 /**
  * Created by platon on 23.07.2016.
  */
-public class PreferencesManager
+public class PreferencesManager implements IPreferencesManager
 {
     public static final String HEADSET_FEATURE_STATE = "settings.feature.headset";
     public static final String YA_SERVICE_RUNNING_STATE = "setting.service";
     private static final String SHARED_PREF_NAME = "com.postnov.artists.pref";
 
-    private SharedPreferences mSharedPreferences;
+    private static PreferencesManager sPreferencesManager;
+    private SharedPreferences sharedPreferences;
 
-    public PreferencesManager(Context context, String name)
+    public static void init(Context context)
     {
-        mSharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+        sPreferencesManager = new PreferencesManager(context);
     }
 
-    public PreferencesManager(Context context)
+    public static void init(Context context, String name)
+    {
+        sPreferencesManager = new PreferencesManager(context);
+    }
+
+    public static PreferencesManager getManager()
+    {
+        return sPreferencesManager;
+    }
+
+    private PreferencesManager(Context context, String name)
+    {
+        sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
+    }
+
+    private PreferencesManager(Context context)
     {
         this(context, SHARED_PREF_NAME);
     }
 
-    public SharedPreferences getSharedPref()
+    @Override
+    public boolean getBoolean(String key)
     {
-        return mSharedPreferences;
+        return sharedPreferences.getBoolean(key, false);
     }
 
-    public Boolean getBoolean(String key)
-    {
-        return mSharedPreferences.getBoolean(key, false);
-    }
-
+    @Override
     public void setBoolean(String key, boolean value)
     {
-        mSharedPreferences.edit().putBoolean(key, value).apply();
+        sharedPreferences.edit().putBoolean(key, value).apply();
     }
 }

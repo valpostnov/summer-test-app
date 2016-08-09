@@ -4,70 +4,55 @@ package com.postnov.android.summerschoolapp.other;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.artists.ArtistsActivity;
+import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
+import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.feature.YaService;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
-import static com.postnov.android.summerschoolapp.utils.PreferencesManager.*;
+import static com.postnov.android.summerschoolapp.utils.PreferencesManager.HEADSET_FEATURE_STATE;
 
-public class SettingsFragment extends Fragment implements CompoundButton.OnCheckedChangeListener
+public class SettingsFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener
 {
-    private PreferencesManager mPreferencesManager;
-    private Unbinder mUnbinder;
+    private PreferencesManager preferencesManager;
 
     @BindView(R.id.setting_hf_checkbox)
-    CheckBox mHeadsetFeatureCheckBox;
+    CheckBox headsetFeatureCheckBox;
 
     public static Fragment newInstance()
     {
         return new SettingsFragment();
     }
 
-    public SettingsFragment() {}
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mPreferencesManager = new PreferencesManager(getActivity().getApplicationContext());
+        preferencesManager = PreferencesManager.getManager();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    protected int getLayout()
     {
-        View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        mUnbinder = ButterKnife.bind(this, view);
-        return view;
+        return R.layout.fragment_settings;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ((ArtistsActivity) getActivity()).setupActionBar(getString(R.string.action_settings), true);
-        mHeadsetFeatureCheckBox.setOnCheckedChangeListener(this);
-        mHeadsetFeatureCheckBox.setChecked(getHeadsetFeatureState());
-    }
+        ToolbarProvider toolbarProvider = getToolbarProvider();
+        if (toolbarProvider != null)
+            toolbarProvider.updateToolbar(getString(R.string.action_settings), true);
 
-    @Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-        if (mUnbinder != null)
-        {
-            mUnbinder.unbind();
-        }
+        headsetFeatureCheckBox.setOnCheckedChangeListener(this);
+        headsetFeatureCheckBox.setChecked(getHeadsetFeatureState());
     }
 
     @Override
@@ -86,11 +71,11 @@ public class SettingsFragment extends Fragment implements CompoundButton.OnCheck
 
     private boolean getHeadsetFeatureState()
     {
-        return mPreferencesManager.getBoolean(HEADSET_FEATURE_STATE);
+        return preferencesManager.getBoolean(HEADSET_FEATURE_STATE);
     }
 
     private void setHeadsetFeatureState(boolean state)
     {
-        mPreferencesManager.setBoolean(HEADSET_FEATURE_STATE, state);
+        preferencesManager.setBoolean(HEADSET_FEATURE_STATE, state);
     }
 }

@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-/**
- * Created by postnov on 12.04.2016.
- */
 public class Cover implements Serializable
 {
     @SerializedName("small")
@@ -14,6 +11,12 @@ public class Cover implements Serializable
 
     @SerializedName("big")
     private String mCoverBig;
+
+    public Cover(String small, String big)
+    {
+        mCoverSmall = small;
+        mCoverBig = big;
+    }
 
     public String getSmall() {
         return mCoverSmall;
@@ -29,5 +32,27 @@ public class Cover implements Serializable
 
     public void setCoverBig(String coverBig) {
         this.mCoverBig = coverBig;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Cover cover = (Cover) o;
+
+        if (!mCoverSmall.equals(cover.mCoverSmall)) return false;
+
+        return mCoverBig.equals(cover.mCoverBig);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = mCoverSmall.hashCode();
+        result = 31 * result + mCoverBig.hashCode();
+
+        return result;
     }
 }

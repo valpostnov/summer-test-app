@@ -15,24 +15,13 @@ import rx.functions.Func1;
  */
 public class Repository implements IDataSource
 {
-    private static Repository sRepository;
-
     private static final int FROM = 0;
     private static final int TO = 1;
 
     private ICache<Artist> cache;
     private IDataSource remote;
 
-    public static Repository getInstance(ICache<Artist> cache, IDataSource remote)
-    {
-        if (sRepository == null)
-        {
-            sRepository = new Repository(cache, remote);
-        }
-        return sRepository;
-    }
-
-    private Repository(ICache<Artist> cache, IDataSource remote)
+    public Repository(ICache<Artist> cache, IDataSource remote)
     {
         this.cache = cache;
         this.remote = remote;

@@ -10,20 +10,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toolbar;
 
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.about.AboutFragment;
+import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
+import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 import com.postnov.android.summerschoolapp.feature.YaService;
 import com.postnov.android.summerschoolapp.other.SettingsFragment;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.*;
 
-public class ArtistsActivity extends Activity
+public class ArtistsActivity extends Activity implements ToolbarProvider, FragmentTransactionManager
 {
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -32,10 +37,10 @@ public class ArtistsActivity extends Activity
 
         if (savedInstanceState == null)
         {
-            addFragment(ArtistsFragment.newInstance(), false);
+            showFragment(ArtistsFragment.newInstance());
         }
 
-        PreferencesManager mPreferencesManager = new PreferencesManager(getApplicationContext());
+        PreferencesManager mPreferencesManager = PreferencesManager.getManager();
 
         if (mPreferencesManager.getBoolean(HEADSET_FEATURE_STATE)
                 && !mPreferencesManager.getBoolean(YA_SERVICE_RUNNING_STATE))
@@ -44,21 +49,44 @@ public class ArtistsActivity extends Activity
         }
     }
 
-    public void addFragment(Fragment fragment, boolean addToBackStack)
+    @Override
+    public void showFragment(Fragment fragment, boolean toBackStack)
     {
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_fragment, fragment);
-        if (addToBackStack) transaction.addToBackStack(null);
+        if (toBackStack) transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
     }
 
-    public void setupActionBar(String title, boolean hasBackButton)
+    @Override
+    public void showFragment(Fragment fragment)
+    {
+        showFragment(fragment, false);
+    }
+
+    @Override
+    public void removeFragment(Fragment fragment)
+    {
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.remove(fragment);
+        transaction.commit();
+    }
+
+    @Override
+    public void updateToolbar(String title, boolean hasBackButton)
     {
         ActionBar actionBar = getActionBar();
         actionBar.setTitle(title);
         actionBar.setDisplayHomeAsUpEnabled(hasBackButton);
+    }
+
+    @Override
+    public void updateToolbar(String title)
+    {
+        updateToolbar(title, false);
     }
 
     @Override
@@ -71,7 +99,7 @@ public class ArtistsActivity extends Activity
                 return true;
 
             case R.id.action_about:
-                addFragment(AboutFragment.newInstance(), true);
+                showFragment(AboutFragment.newInstance(), true);
                 return true;
 
             case R.id.action_feedback:
@@ -79,7 +107,7 @@ public class ArtistsActivity extends Activity
                 return true;
 
             case R.id.action_settings:
-                addFragment(SettingsFragment.newInstance(), true);
+                showFragment(SettingsFragment.newInstance(), true);
                 return true;
         }
 

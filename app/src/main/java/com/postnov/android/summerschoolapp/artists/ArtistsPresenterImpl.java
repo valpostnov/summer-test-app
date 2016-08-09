@@ -7,76 +7,75 @@ import com.postnov.android.summerschoolapp.data.source.IDataSource;
 
 import java.util.List;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by platon on 15.07.2016.
  */
-public class ArtistsPresenterImpl implements ArtistsPresenter<ArtistsView>
+public class ArtistsPresenterImpl implements ArtistsPresenter
 {
-    private ArtistsView mArtistsView;
-    private CompositeSubscription mSubscriptions;
-    private IDataSource mRepository;
+    private ArtistsView artistsView;
+    private CompositeSubscription subscriptions;
+    private IDataSource repository;
 
     public ArtistsPresenterImpl(IDataSource repository)
     {
-        mRepository = repository;
-        mSubscriptions = new CompositeSubscription();
+        this.repository = repository;
+        subscriptions = new CompositeSubscription();
     }
 
     @Override
     public void fetchArtists(final boolean forceLoad, final int[] range)
     {
-        mArtistsView.showProgressView(true);
+        artistsView.showProgressView(true);
 
-        if (forceLoad) mRepository.delete();
+        if (forceLoad) repository.delete();
 
-        mSubscriptions.add(mRepository.getList(range)
-
+        subscriptions.add(repository.getList(range)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<List<Artist>>()
-                {
-                    @Override
-                    public void onCompleted()
-                    {
-                        mArtistsView.showProgressView(false);
-                    }
-
-                    @Override
-                    public void onError(Throwable e)
-                    {
-                        mArtistsView.showProgressView(false);
-                        mArtistsView.showError(e);
-                    }
-
-                    @Override
-                    public void onNext(List<Artist> artists)
-                    {
-                        mArtistsView.showArtists(artists);
-                    }
-                }));
+                .subscribe(onNext, onError));
     }
 
     @Override
     public void bind(ArtistsView view)
     {
-        this.mArtistsView = view;
+        artistsView = view;
     }
 
     @Override
     public void unbind()
     {
-        mArtistsView.showProgressView(false);
-        mArtistsView = null;
+        artistsView.showProgressView(false);
+        artistsView = null;
     }
 
     @Override
     public void unsubscribe()
     {
-        mSubscriptions.clear();
+        subscriptions.clear();
     }
+
+    private Action1<List<Artist>> onNext = new Action1<List<Artist>>()
+    {
+        @Override
+        public void call(List<Artist> artists)
+        {
+            artistsView.showProgressView(false);
+            artistsView.showArtists(artists);
+        }
+    };
+
+    private Action1<Throwable> onError = new Action1<Throwable>()
+    {
+        @Override
+        public void call(Throwable e)
+        {
+            artistsView.showProgressView(false);
+            artistsView.showError(e);
+        }
+    };
 }

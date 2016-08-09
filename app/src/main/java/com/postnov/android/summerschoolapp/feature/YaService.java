@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
@@ -21,8 +20,8 @@ import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SE
 public class YaService extends Service
 {
     private static final int NOTIFY_ID = 1;
-    private final HeadsetPlugReceiver mHeadsetPlugReceiver = new HeadsetPlugReceiver();
-    private PreferencesManager mPreferencesManager;
+    private final HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
+    private PreferencesManager preferencesManager;
 
     public YaService() {}
 
@@ -30,16 +29,16 @@ public class YaService extends Service
     public void onCreate()
     {
         super.onCreate();
-        mPreferencesManager = new PreferencesManager(getApplicationContext());
-        mPreferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, true);
-        registerReceiver(mHeadsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        preferencesManager = PreferencesManager.getManager();
+        preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, true);
+        registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
     }
 
     @Override
     public void onDestroy()
     {
-        mPreferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, false);
-        unregisterReceiver(mHeadsetPlugReceiver);
+        preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, false);
+        unregisterReceiver(headsetPlugReceiver);
         showNotification(false);
         super.onDestroy();
     }
