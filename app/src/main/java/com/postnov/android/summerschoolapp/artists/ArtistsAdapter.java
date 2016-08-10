@@ -1,6 +1,7 @@
 package com.postnov.android.summerschoolapp.artists;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,12 +101,13 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
         public void bind(Artist artist)
         {
-            String albums = context.getResources().getQuantityString(
+            Resources res = context.getResources();
+            String albums = res.getQuantityString(
                     R.plurals.numberOfAlbums,
                     artist.getAlbums(),
                     artist.getAlbums());
 
-            String tracks = context.getResources().getQuantityString(
+            String tracks = res.getQuantityString(
                     R.plurals.numberOfTracks,
                     artist.getTracks(),
                     artist.getTracks());

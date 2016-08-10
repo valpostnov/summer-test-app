@@ -1,4 +1,4 @@
-package com.postnov.android.summerschoolapp.about;
+package com.postnov.android.summerschoolapp.other;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
