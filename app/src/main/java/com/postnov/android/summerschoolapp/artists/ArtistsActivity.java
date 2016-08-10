@@ -34,7 +34,7 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
 
         if (savedInstanceState == null)
         {
-            replaceFragment(ArtistsFragment.newInstance());
+            replaceFragmentWithoutBackStack(ArtistsFragment.newInstance());
         }
 
         IPreferencesManager preferencesManager = App.from(this).getPreferencesManager();
