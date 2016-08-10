@@ -8,6 +8,7 @@ import com.postnov.android.summerschoolapp.data.source.IDataSource;
 import com.postnov.android.summerschoolapp.data.source.Repository;
 import com.postnov.android.summerschoolapp.data.source.local.CacheImpl;
 import com.postnov.android.summerschoolapp.data.source.local.ICache;
+import com.postnov.android.summerschoolapp.data.source.local.JsonSerializer;
 import com.postnov.android.summerschoolapp.data.source.remote.RemoteDataSource;
 import com.postnov.android.summerschoolapp.utils.INetworkManager;
 import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
@@ -15,6 +16,7 @@ import com.postnov.android.summerschoolapp.utils.NetworkManager;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by platon on 09.08.2016.
@@ -51,6 +53,7 @@ public class App extends Application
         super.onCreate();
         networkManager = new NetworkManager(getApplicationContext());
         preferencesManager = new PreferencesManager(getApplicationContext());
-        artistRepository = new Repository(new CacheImpl(getCacheDir()), new RemoteDataSource());
+        ICache<Artist> cache = new CacheImpl(getCacheDir(), new JsonSerializer());
+        artistRepository = new Repository(cache, new RemoteDataSource());
     }
 }

@@ -28,6 +28,7 @@ public class Repository implements IDataSource
     public Observable<List<Artist>> getList(int from, int to)
     {
         if (cache.isEmpty()) return fromRemote(from, to);
+
         return fromLocal(from, to);
     }
 
@@ -39,33 +40,13 @@ public class Repository implements IDataSource
 
     private Observable<List<Artist>> fromRemote(final int from, final int to)
     {
-        return remote.getList(from, to).doOnNext(new Action1<List<Artist>>()
-        {
-            @Override
-            public void call(List<Artist> artists)
-            {
-                cache.put(artists);
-            }
-
-        }).map(new Func1<List<Artist>, List<Artist>>()
-        {
-            @Override
-            public List<Artist> call(List<Artist> artists)
-            {
-                return artists.subList(from, to);
-            }
-        });
+        return remote.getList(from, to)
+                .doOnNext(artists -> cache.put(artists))
+                .map(artists -> artists.subList(from, to));
     }
 
     private Observable<List<Artist>> fromLocal(final int from, final int to)
     {
-        return Observable.just(cache.get()).map(new Func1<List<Artist>, List<Artist>>()
-        {
-            @Override
-            public List<Artist> call(List<Artist> artists)
-            {
-                return artists.subList(from, to);
-            }
-        });
+        return Observable.just(cache.get()).map(artists -> artists.subList(from, to));
     }
 }

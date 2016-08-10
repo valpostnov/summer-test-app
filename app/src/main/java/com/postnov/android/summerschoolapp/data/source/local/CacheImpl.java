@@ -17,42 +17,32 @@ import java.util.List;
 public class CacheImpl implements ICache<Artist>
 {
     private final File cachedFile;
+    private final JsonSerializer serializer;
+    private final FileManager fileManager;
 
-    public CacheImpl(File cacheDir, String name)
+    public CacheImpl(File cacheDir, String name, JsonSerializer artistCacheSerializer)
     {
         cachedFile = new File(cacheDir, name);
+        fileManager = new FileManager();
+        serializer = artistCacheSerializer;
     }
 
-    public CacheImpl(File cacheDir)
+    public CacheImpl(File cacheDir, JsonSerializer artistCacheSerializer)
     {
-        this(cacheDir, "artists.list");
+        this(cacheDir, "artists.list", artistCacheSerializer);
     }
 
     @Override
-    public List<Artist> get() {
-
-        try (FileInputStream is = new FileInputStream(cachedFile); ObjectInputStream in = new ObjectInputStream(is))
-        {
-            return (List<Artist>) in.readObject();
-        }
-        catch (ClassNotFoundException | IOException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+    public List<Artist> get()
+    {
+        String json = fileManager.readFileContent(cachedFile);
+        return serializer.deserialize(json);
     }
 
     @Override
     public void put(List<Artist> list)
     {
-        try (FileOutputStream os = new FileOutputStream(cachedFile); ObjectOutputStream out = new ObjectOutputStream(os))
-        {
-            out.writeObject(list);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        fileManager.writeToFile(cachedFile, serializer.serialize(list));
     }
 
     @Override

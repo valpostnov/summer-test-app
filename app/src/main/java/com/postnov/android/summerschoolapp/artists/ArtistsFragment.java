@@ -13,14 +13,8 @@ import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsView;
 import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
 import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
-import com.postnov.android.summerschoolapp.data.source.IDataSource;
-import com.postnov.android.summerschoolapp.data.source.Repository;
-import com.postnov.android.summerschoolapp.data.source.local.CacheImpl;
-import com.postnov.android.summerschoolapp.data.source.local.ICache;
-import com.postnov.android.summerschoolapp.data.source.remote.RemoteDataSource;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
-import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,9 +22,9 @@ import butterknife.BindView;
 public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ArtistsAdapter.OnAdapterListener, ArtistsView
 {
-    private static final int TO = 20;
-    private static final int FROM = 0;
-    private static int sCachedLoadedArtists = 20;
+    private static final int LIMIT = 20;
+    private static final int OFFSET = 0;
+    private static int sCachedCountArtists = 20;
 
     @BindView(R.id.swipe_view) SwipeRefreshLayout refreshLayout;
     @BindView(R.id.recyclerview_artist) RecyclerView rv;
@@ -45,14 +39,6 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState)
-    {
-        super.onActivityCreated(savedInstanceState);
-        getToolbarProvider().updateToolbar(getString(R.string.app_name));
-        presenter = new ArtistsPresenterImpl(App.from(getActivity()).getArtistRepository());
-    }
-
-    @Override
     protected int getLayout()
     {
         return R.layout.fragment_artists;
@@ -63,10 +49,14 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     {
         super.onViewCreated(view, savedInstanceState);
 
+        getToolbarProvider().updateToolbar(getString(R.string.app_name));
+        presenter = new ArtistsPresenterImpl(App.from(getActivity()).getArtistRepository());
+
         artistsAdapter = new ArtistsAdapter(getActivity());
         artistsAdapter.setOnAdapterListener(this);
         artistsAdapter.setOnAdapterListener(this);
         refreshLayout.setOnRefreshListener(this);
+
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(artistsAdapter);
     }
@@ -76,14 +66,14 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     {
         super.onResume();
         presenter.bind(this);
-        presenter.fetchArtists(false, FROM, sCachedLoadedArtists);
+        presenter.fetchArtists(false, OFFSET, sCachedCountArtists);
     }
 
     @Override
     public void onPause()
     {
         super.onPause();
-        sCachedLoadedArtists = artistsAdapter.getItemCount();
+        sCachedCountArtists = artistsAdapter.getItemCount();
         presenter.unbind();
     }
 
@@ -91,22 +81,20 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onRefresh()
     {
         artistsAdapter.clear();
-        presenter.fetchArtists(true, FROM, TO);
+        presenter.fetchArtists(true, OFFSET, LIMIT);
     }
 
     @Override
     public void onItemClick(View view, int position)
     {
         Artist artist = artistsAdapter.getList().get(position);
-        FragmentTransactionManager fragmentTransactionManager = getFragmentTransactionManager();
-        if (fragmentTransactionManager != null)
-            fragmentTransactionManager.replaceFragment(DetailsFragment.newInstance(artist));
+        getFragmentTransactionManager().replaceFragment(DetailsFragment.newInstance(artist));
     }
 
     @Override
     public void onLoadMore(int count)
     {
-        presenter.fetchArtists(false, count, count + TO);
+        presenter.fetchArtists(false, count, count + LIMIT);
     }
 
     @Override

@@ -53,23 +53,15 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
         artistsView = null;
     }
 
-    private Action1<List<Artist>> onNext = new Action1<List<Artist>>()
+    private Action1<List<Artist>> onNext = artists ->
     {
-        @Override
-        public void call(List<Artist> artists)
-        {
-            artistsView.showProgressView(false);
-            artistsView.showArtists(artists);
-        }
+        artistsView.showProgressView(false);
+        artistsView.showArtists(artists);
     };
 
-    private Action1<Throwable> onError = new Action1<Throwable>()
+    private Action1<Throwable> onError = e ->
     {
-        @Override
-        public void call(Throwable e)
-        {
-            artistsView.showProgressView(false);
-            artistsView.showError(e);
-        }
+        artistsView.showProgressView(false);
+        artistsView.showError(e);
     };
 }

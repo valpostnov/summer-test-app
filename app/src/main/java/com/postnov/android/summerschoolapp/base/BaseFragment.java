@@ -23,7 +23,6 @@ public abstract class BaseFragment extends Fragment
     private Unbinder unbinder;
     private ToolbarProvider toolbarProvider;
     private FragmentTransactionManager fragmentTransactionManager;
-    private ArtistsActivity activity = (ArtistsActivity) getActivity();
 
     protected abstract int getLayout();
 
@@ -31,10 +30,12 @@ public abstract class BaseFragment extends Fragment
     public void onAttach(Context context)
     {
         super.onAttach(context);
+        ArtistsActivity activity = (ArtistsActivity) getActivity();
+
         if (activity != null)
         {
-            toolbarProvider = (ToolbarProvider) getActivity();
-            fragmentTransactionManager = (FragmentTransactionManager) getActivity();
+            toolbarProvider = activity;
+            fragmentTransactionManager = activity;
         }
     }
 

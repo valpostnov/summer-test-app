@@ -1,6 +1,7 @@
 package com.postnov.android.summerschoolapp.other;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -58,14 +59,11 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
         setHeadsetFeatureState(isChecked);
-        if (isChecked)
-        {
-            getActivity().startService(new Intent(getActivity(), YaService.class));
-        }
-        else
-        {
-            getActivity().stopService(new Intent(getActivity(), YaService.class));
-        }
+        Activity activity = getActivity();
+        Intent intent = new Intent(activity, YaService.class);
+
+        if (isChecked) activity.startService(intent);
+        else activity.stopService(intent);
     }
 
     private boolean getHeadsetFeatureState()
