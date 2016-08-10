@@ -1,5 +1,6 @@
 package com.postnov.android.summerschoolapp.artists;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,8 +27,6 @@ public class DetailsFragment extends BaseFragment
     @BindView(R.id.detail_albums_songs) TextView albumsTracksTextView;
     @BindView(R.id.detail_desc) TextView descTextView;
 
-    public DetailsFragment() {}
-
     public static DetailsFragment newInstance(Artist artist)
     {
         DetailsFragment fragment = new DetailsFragment();
@@ -36,12 +35,6 @@ public class DetailsFragment extends BaseFragment
         fragment.setArguments(bundle);
 
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -55,12 +48,20 @@ public class DetailsFragment extends BaseFragment
     {
         super.onViewCreated(view, savedInstanceState);
 
+        Resources res = getResources();
         Artist artist = (Artist) getArguments().getSerializable(ARTIST_OBJECT);
-        String albums = getResources().getQuantityString(R.plurals.numberOfAlbums, artist.getAlbums(), artist.getAlbums());
-        String tracks = getResources().getQuantityString(R.plurals.numberOfTracks, artist.getTracks(), artist.getTracks());
 
-        ToolbarProvider toolbarProvider = getToolbarProvider();
-        if (toolbarProvider != null) toolbarProvider.updateToolbar(artist.getName(), true);
+        String albums = res.getQuantityString(
+                R.plurals.numberOfAlbums,
+                artist.getAlbums(),
+                artist.getAlbums());
+
+        String tracks = res.getQuantityString(
+                R.plurals.numberOfTracks,
+                artist.getTracks(),
+                artist.getTracks());
+
+        getToolbarProvider().updateToolbar(artist.getName(), true);
 
         genresTextView.setText(artist.getGenres());
         albumsTracksTextView.setText(Utils.concatStrings(tracks, ", " , albums));

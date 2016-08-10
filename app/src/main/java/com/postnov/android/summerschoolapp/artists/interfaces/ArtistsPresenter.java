@@ -5,8 +5,7 @@ package com.postnov.android.summerschoolapp.artists.interfaces;
  */
 public interface ArtistsPresenter
 {
-    void fetchArtists(boolean forceLoad, int[] range);
+    void fetchArtists(boolean forceLoad, int from, int to);
     void bind(ArtistsView view);
     void unbind();
-    void unsubscribe();
 }

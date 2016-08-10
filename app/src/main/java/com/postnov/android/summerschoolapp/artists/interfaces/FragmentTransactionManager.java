@@ -8,7 +8,7 @@ import android.app.Fragment;
  */
 public interface FragmentTransactionManager
 {
-    void showFragment(Fragment fragment, boolean toBackStack);
-    void showFragment(Fragment fragment);
+    void replaceFragmentWithoutBackStack(Fragment fragment);
+    void replaceFragment(Fragment fragment);
     void removeFragment(Fragment fragment);
 }

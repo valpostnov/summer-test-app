@@ -12,30 +12,14 @@ public class PreferencesManager implements IPreferencesManager
     public static final String YA_SERVICE_RUNNING_STATE = "setting.service";
     private static final String SHARED_PREF_NAME = "com.postnov.artists.pref";
 
-    private static PreferencesManager sPreferencesManager;
     private SharedPreferences sharedPreferences;
 
-    public static void init(Context context)
-    {
-        sPreferencesManager = new PreferencesManager(context);
-    }
-
-    public static void init(Context context, String name)
-    {
-        sPreferencesManager = new PreferencesManager(context);
-    }
-
-    public static PreferencesManager getManager()
-    {
-        return sPreferencesManager;
-    }
-
-    private PreferencesManager(Context context, String name)
+    public PreferencesManager(Context context, String name)
     {
         sharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE);
     }
 
-    private PreferencesManager(Context context)
+    public PreferencesManager(Context context)
     {
         this(context, SHARED_PREF_NAME);
     }

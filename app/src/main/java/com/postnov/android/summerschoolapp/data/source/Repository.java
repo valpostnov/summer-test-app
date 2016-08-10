@@ -15,9 +15,6 @@ import rx.functions.Func1;
  */
 public class Repository implements IDataSource
 {
-    private static final int FROM = 0;
-    private static final int TO = 1;
-
     private ICache<Artist> cache;
     private IDataSource remote;
 
@@ -28,10 +25,10 @@ public class Repository implements IDataSource
     }
 
     @Override
-    public Observable<List<Artist>> getList(int[] range)
+    public Observable<List<Artist>> getList(int from, int to)
     {
-        if (cache.isEmpty()) return fromRemote(range);
-        return fromLocal(range);
+        if (cache.isEmpty()) return fromRemote(from, to);
+        return fromLocal(from, to);
     }
 
     @Override
@@ -40,9 +37,9 @@ public class Repository implements IDataSource
         cache.clear();
     }
 
-    private Observable<List<Artist>> fromRemote(final int[] range)
+    private Observable<List<Artist>> fromRemote(final int from, final int to)
     {
-        return remote.getList(range).doOnNext(new Action1<List<Artist>>()
+        return remote.getList(from, to).doOnNext(new Action1<List<Artist>>()
         {
             @Override
             public void call(List<Artist> artists)
@@ -55,19 +52,19 @@ public class Repository implements IDataSource
             @Override
             public List<Artist> call(List<Artist> artists)
             {
-                return artists.subList(range[FROM], range[TO]);
+                return artists.subList(from, to);
             }
         });
     }
 
-    private Observable<List<Artist>> fromLocal(final int[] range)
+    private Observable<List<Artist>> fromLocal(final int from, final int to)
     {
         return Observable.just(cache.get()).map(new Func1<List<Artist>, List<Artist>>()
         {
             @Override
             public List<Artist> call(List<Artist> artists)
             {
-                return artists.subList(range[FROM], range[TO]);
+                return artists.subList(from, to);
             }
         });
     }

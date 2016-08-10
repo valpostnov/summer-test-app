@@ -25,18 +25,13 @@ import butterknife.ButterKnife;
 public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsViewHolder>
 {
     private List<Artist> artists;
-    private OnItemClickListener onItemClickListener;
-    private OnEndlessListener onEndlessListener;
+    private OnAdapterListener onAdapterListener;
     private Context context;
 
-    public interface OnItemClickListener
+    public interface OnAdapterListener
     {
         void onItemClick(View view, int position);
-    }
-
-    public interface OnEndlessListener
-    {
-        void loadMore(int count);
+        void onLoadMore(int count);
     }
 
     public ArtistsAdapter(Context context)
@@ -100,7 +95,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         public void onClick(View v)
         {
             int adapterPosition = getAdapterPosition();
-            onItemClickListener.onItemClick(v, adapterPosition);
+            onAdapterListener.onItemClick(v, adapterPosition);
         }
 
         public void bind(Artist artist)
@@ -127,17 +122,12 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
                     .into(artistImage);
 
             if (getAdapterPosition() == getItemCount() - 1)
-            { onEndlessListener.loadMore(getItemCount()); }
+            { onAdapterListener.onLoadMore(getItemCount()); }
         }
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener)
+    public void setOnAdapterListener(OnAdapterListener listener)
     {
-        onItemClickListener = listener;
-    }
-
-    public void setOnEndlessListener(OnEndlessListener listener)
-    {
-        onEndlessListener = listener;
+        onAdapterListener = listener;
     }
 }

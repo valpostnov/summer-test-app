@@ -28,13 +28,12 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
     }
 
     @Override
-    public void fetchArtists(final boolean forceLoad, final int[] range)
+    public void fetchArtists(final boolean forceLoad, final int from, final int to)
     {
         artistsView.showProgressView(true);
-
         if (forceLoad) repository.delete();
 
-        subscriptions.add(repository.getList(range)
+        subscriptions.add(repository.getList(from, to)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(onNext, onError));
@@ -50,13 +49,8 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
     public void unbind()
     {
         artistsView.showProgressView(false);
-        artistsView = null;
-    }
-
-    @Override
-    public void unsubscribe()
-    {
         subscriptions.clear();
+        artistsView = null;
     }
 
     private Action1<List<Artist>> onNext = new Action1<List<Artist>>()

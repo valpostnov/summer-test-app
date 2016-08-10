@@ -11,8 +11,9 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
+import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.utils.PreferencesManager;
+import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SERVICE_RUNNING_STATE;
@@ -21,7 +22,7 @@ public class YaService extends Service
 {
     private static final int NOTIFY_ID = 1;
     private final HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
-    private PreferencesManager preferencesManager;
+    private IPreferencesManager preferencesManager;
 
     public YaService() {}
 
@@ -29,7 +30,7 @@ public class YaService extends Service
     public void onCreate()
     {
         super.onCreate();
-        preferencesManager = PreferencesManager.getManager();
+        preferencesManager = App.from(this).getPreferencesManager();
         preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, true);
         registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
     }
@@ -39,7 +40,7 @@ public class YaService extends Service
     {
         preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, false);
         unregisterReceiver(headsetPlugReceiver);
-        showNotification(false);
+        setNotificationVisibility(false);
         super.onDestroy();
     }
 
@@ -55,22 +56,21 @@ public class YaService extends Service
         return START_STICKY;
     }
 
-    private void showNotification(boolean show)
+    private void setNotificationVisibility(boolean visible)
     {
-        NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (show)
+        if (visible)
         {
             NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
             notification.setSmallIcon(R.mipmap.ic_launcher);
             notification.setContentTitle(getString(R.string.headset_plug));
             notification.addAction(R.drawable.ic_music, getString(R.string.music), createPIntent("ru.yandex.music"));
             notification.addAction(R.drawable.ic_radio, getString(R.string.radio), createPIntent("ru.yandex.radio"));
-            mNotifyManager.notify(NOTIFY_ID, notification.build());
-            return;
+            notifyManager.notify(NOTIFY_ID, notification.build());
         }
 
-        mNotifyManager.cancel(NOTIFY_ID);
+        else notifyManager.cancel(NOTIFY_ID);
     }
 
     private PendingIntent createPIntent(String packageName)
@@ -98,11 +98,11 @@ public class YaService extends Service
             switch (state)
             {
                 case STATE_PLUG:
-                    showNotification(true);
+                    setNotificationVisibility(true);
                     break;
 
                 case STATE_UNPLUG:
-                    showNotification(false);
+                    setNotificationVisibility(false);
                     break;
             }
         }

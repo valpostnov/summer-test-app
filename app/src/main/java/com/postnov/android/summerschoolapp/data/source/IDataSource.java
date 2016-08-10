@@ -11,6 +11,6 @@ import rx.Observable;
  */
 public interface IDataSource
 {
-    Observable<List<Artist>> getList(int[] range);
+    Observable<List<Artist>> getList(int from, int to);
     void delete();
 }

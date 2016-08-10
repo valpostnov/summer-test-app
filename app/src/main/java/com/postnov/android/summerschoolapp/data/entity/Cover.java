@@ -7,31 +7,31 @@ import java.io.Serializable;
 public class Cover implements Serializable
 {
     @SerializedName("small")
-    private String mCoverSmall;
+    private String coverSmall;
 
     @SerializedName("big")
-    private String mCoverBig;
+    private String coverBig;
 
     public Cover(String small, String big)
     {
-        mCoverSmall = small;
-        mCoverBig = big;
+        coverSmall = small;
+        coverBig = big;
     }
 
     public String getSmall() {
-        return mCoverSmall;
+        return coverSmall;
     }
 
     public void setCoverSmall(String coverSmall) {
-        this.mCoverSmall = coverSmall;
+        this.coverSmall = coverSmall;
     }
 
     public String getCoverBig() {
-        return mCoverBig;
+        return coverBig;
     }
 
     public void setCoverBig(String coverBig) {
-        this.mCoverBig = coverBig;
+        this.coverBig = coverBig;
     }
 
     @Override
@@ -42,16 +42,16 @@ public class Cover implements Serializable
 
         Cover cover = (Cover) o;
 
-        if (!mCoverSmall.equals(cover.mCoverSmall)) return false;
+        if (!coverSmall.equals(cover.coverSmall)) return false;
 
-        return mCoverBig.equals(cover.mCoverBig);
+        return coverBig.equals(cover.coverBig);
     }
 
     @Override
     public int hashCode()
     {
-        int result = mCoverSmall.hashCode();
-        result = 31 * result + mCoverBig.hashCode();
+        int result = coverSmall.hashCode();
+        result = 31 * result + coverBig.hashCode();
 
         return result;
     }

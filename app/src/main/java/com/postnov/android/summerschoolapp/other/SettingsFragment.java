@@ -8,10 +8,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.feature.YaService;
+import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 
 import butterknife.BindView;
@@ -20,7 +21,7 @@ import static com.postnov.android.summerschoolapp.utils.PreferencesManager.HEADS
 
 public class SettingsFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener
 {
-    private PreferencesManager preferencesManager;
+    private IPreferencesManager preferencesManager;
 
     @BindView(R.id.setting_hf_checkbox)
     CheckBox headsetFeatureCheckBox;
@@ -34,7 +35,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        preferencesManager = PreferencesManager.getManager();
+        preferencesManager = App.from(getActivity()).getPreferencesManager();
     }
 
     @Override
@@ -47,9 +48,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ToolbarProvider toolbarProvider = getToolbarProvider();
-        if (toolbarProvider != null)
-            toolbarProvider.updateToolbar(getString(R.string.action_settings), true);
+        getToolbarProvider().updateToolbar(getString(R.string.action_settings), true);
 
         headsetFeatureCheckBox.setOnCheckedChangeListener(this);
         headsetFeatureCheckBox.setChecked(getHeadsetFeatureState());

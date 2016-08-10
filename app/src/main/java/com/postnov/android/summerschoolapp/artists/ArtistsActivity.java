@@ -3,15 +3,14 @@ package com.postnov.android.summerschoolapp.artists;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
+import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.about.AboutFragment;
@@ -19,11 +18,9 @@ import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactio
 import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 import com.postnov.android.summerschoolapp.feature.YaService;
 import com.postnov.android.summerschoolapp.other.SettingsFragment;
+import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.*;
 
@@ -37,42 +34,44 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
 
         if (savedInstanceState == null)
         {
-            showFragment(ArtistsFragment.newInstance());
+            replaceFragment(ArtistsFragment.newInstance());
         }
 
-        PreferencesManager mPreferencesManager = PreferencesManager.getManager();
+        IPreferencesManager preferencesManager = App.from(this).getPreferencesManager();
 
-        if (mPreferencesManager.getBoolean(HEADSET_FEATURE_STATE)
-                && !mPreferencesManager.getBoolean(YA_SERVICE_RUNNING_STATE))
+        if (preferencesManager.getBoolean(HEADSET_FEATURE_STATE)
+                && !preferencesManager.getBoolean(YA_SERVICE_RUNNING_STATE))
         {
             startService(new Intent(this, YaService.class));
         }
     }
 
     @Override
-    public void showFragment(Fragment fragment, boolean toBackStack)
+    public void replaceFragment(Fragment fragment)
     {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content_fragment, fragment);
-        if (toBackStack) transaction.addToBackStack(null);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.commit();
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_fragment, fragment)
+                .addToBackStack(null)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     @Override
-    public void showFragment(Fragment fragment)
+    public void replaceFragmentWithoutBackStack(Fragment fragment)
     {
-        showFragment(fragment, false);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.content_fragment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit();
     }
 
     @Override
     public void removeFragment(Fragment fragment)
     {
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.remove(fragment);
-        transaction.commit();
+        getFragmentManager().beginTransaction()
+                .remove(fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+                .commit();
     }
 
     @Override
@@ -99,7 +98,7 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
                 return true;
 
             case R.id.action_about:
-                showFragment(AboutFragment.newInstance(), true);
+                replaceFragment(AboutFragment.newInstance());
                 return true;
 
             case R.id.action_feedback:
@@ -107,7 +106,7 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
                 return true;
 
             case R.id.action_settings:
-                showFragment(SettingsFragment.newInstance(), true);
+                replaceFragment(SettingsFragment.newInstance());
                 return true;
         }
 
