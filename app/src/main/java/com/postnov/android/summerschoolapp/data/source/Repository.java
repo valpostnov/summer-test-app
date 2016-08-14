@@ -3,12 +3,11 @@ package com.postnov.android.summerschoolapp.data.source;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.data.source.local.ICache;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.functions.Action1;
-import rx.functions.Func1;
+
+import static com.postnov.android.summerschoolapp.utils.Utils.subList;
 
 /**
  * Created by platon on 15.07.2016.
@@ -47,6 +46,8 @@ public class Repository implements IDataSource
 
     private Observable<List<Artist>> fromLocal(final int from, final int to)
     {
-        return Observable.just(cache.get()).map(artists -> artists.subList(from, to));
+        return Observable.just(cache.get())
+                .filter(artists -> (artists.size() != from))
+                .map(artists -> subList(from, to, artists));
     }
 }

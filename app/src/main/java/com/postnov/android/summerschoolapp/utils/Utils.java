@@ -1,9 +1,11 @@
 package com.postnov.android.summerschoolapp.utils;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.widget.Toast;
+
+import com.postnov.android.summerschoolapp.data.entity.Artist;
+
+import java.util.List;
 
 /**
  * Created by postnov on 25.03.2016.
@@ -28,5 +30,12 @@ public class Utils
         }
 
         return builder.toString();
+    }
+
+    public static List subList(int from, int to, List list)
+    {
+        final int size = list.size();
+        if (size < to) return list.subList(from, size);
+        return list.subList(from, to);
     }
 }
