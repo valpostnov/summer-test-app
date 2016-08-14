@@ -10,9 +10,10 @@ import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsPresenter;
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsView;
-import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
 import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
+import com.postnov.android.summerschoolapp.other.RecyclerScrollListener;
+import com.postnov.android.summerschoolapp.other.ScrollHelperAdapter;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
-        ArtistsAdapter.OnAdapterListener, ArtistsView
+        ArtistsAdapter.OnItemClickListener, ArtistsView, ScrollHelperAdapter
 {
     private static final int LIMIT = 20;
     private static final int OFFSET = 0;
@@ -53,11 +54,11 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
         presenter = new ArtistsPresenterImpl(App.from(getActivity()).getArtistRepository());
 
         artistsAdapter = new ArtistsAdapter(getActivity());
-        artistsAdapter.setOnAdapterListener(this);
-        artistsAdapter.setOnAdapterListener(this);
+        artistsAdapter.setOnItemClickListener(this);
         refreshLayout.setOnRefreshListener(this);
 
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.addOnScrollListener(new RecyclerScrollListener(this));
         rv.setAdapter(artistsAdapter);
     }
 
@@ -107,7 +108,7 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void showProgressView(final boolean show)
     {
-        refreshLayout.setRefreshing(show);
+        refreshLayout.post(() -> refreshLayout.setRefreshing(show));
     }
 
     @Override

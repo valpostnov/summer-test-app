@@ -3,6 +3,7 @@ package com.postnov.android.summerschoolapp.artists;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,12 @@ import butterknife.ButterKnife;
 public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsViewHolder>
 {
     private List<Artist> artists;
-    private OnAdapterListener onAdapterListener;
+    private OnItemClickListener onItemClickListener;
     private Context context;
 
-    public interface OnAdapterListener
+    public interface OnItemClickListener
     {
         void onItemClick(View view, int position);
-        void onLoadMore(int count);
     }
 
     public ArtistsAdapter(Context context)
@@ -64,6 +64,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public void changeList(List<Artist> newList)
     {
+        Log.d("TAG", "newList");
         artists.addAll(newList);
         notifyDataSetChanged();
     }
@@ -96,7 +97,7 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
         public void onClick(View v)
         {
             int adapterPosition = getAdapterPosition();
-            onAdapterListener.onItemClick(v, adapterPosition);
+            onItemClickListener.onItemClick(v, adapterPosition);
         }
 
         public void bind(Artist artist)
@@ -122,14 +123,11 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
                     .load(imageUrl)
                     .override(100, 100)
                     .into(artistImage);
-
-            if (getAdapterPosition() == getItemCount() - 1)
-            { onAdapterListener.onLoadMore(getItemCount()); }
         }
     }
 
-    public void setOnAdapterListener(OnAdapterListener listener)
+    public void setOnItemClickListener(OnItemClickListener listener)
     {
-        onAdapterListener = listener;
+        onItemClickListener = listener;
     }
 }
