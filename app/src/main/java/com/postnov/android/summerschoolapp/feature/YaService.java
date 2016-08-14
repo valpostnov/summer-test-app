@@ -1,5 +1,6 @@
 package com.postnov.android.summerschoolapp.feature;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,12 +18,17 @@ import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SERVICE_RUNNING_STATE;
+import static com.postnov.android.summerschoolapp.utils.Utils.concatStrings;
 
 public class YaService extends Service
 {
+    private static final int VISIBLE = 1;
+    private static final int GONE = -1;
+
     private static final int NOTIFY_ID = 1;
-    private final HeadsetPlugReceiver headsetPlugReceiver = new HeadsetPlugReceiver();
+    private HeadsetPlugReceiver headsetPlugReceiver;
     private IPreferencesManager preferencesManager;
+    private NotificationManager notificationManager;
 
     public YaService() {}
 
@@ -30,8 +36,10 @@ public class YaService extends Service
     public void onCreate()
     {
         super.onCreate();
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         preferencesManager = App.from(this).getPreferencesManager();
         preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, true);
+        headsetPlugReceiver = new HeadsetPlugReceiver();
         registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
     }
 
@@ -40,7 +48,7 @@ public class YaService extends Service
     {
         preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, false);
         unregisterReceiver(headsetPlugReceiver);
-        setNotificationVisibility(false);
+        setNotificationVisibility(GONE);
         super.onDestroy();
     }
 
@@ -56,26 +64,33 @@ public class YaService extends Service
         return START_STICKY;
     }
 
-    private void setNotificationVisibility(boolean visible)
+    private void setNotificationVisibility(int state)
     {
-        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (visible)
+        switch (state)
         {
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
-            notification.setSmallIcon(R.mipmap.ic_launcher);
-            notification.setContentTitle(getString(R.string.headset_plug));
-            notification.addAction(R.drawable.ic_music, getString(R.string.music), createPIntent("ru.yandex.music"));
-            notification.addAction(R.drawable.ic_radio, getString(R.string.radio), createPIntent("ru.yandex.radio"));
-            notifyManager.notify(NOTIFY_ID, notification.build());
-        }
+            case VISIBLE:
+                notificationManager.notify(NOTIFY_ID, createNotification());
+                break;
 
-        else notifyManager.cancel(NOTIFY_ID);
+            case GONE:
+                notificationManager.cancel(NOTIFY_ID);
+                break;
+        }
+    }
+
+    private Notification createNotification()
+    {
+        return new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.headset_plug))
+                .addAction(R.drawable.ic_music, getString(R.string.music), createPIntent("ru.yandex.music"))
+                .addAction(R.drawable.ic_radio, getString(R.string.radio), createPIntent("ru.yandex.radio"))
+                .build();
     }
 
     private PendingIntent createPIntent(String packageName)
     {
-        String appUrl = Utils.concatStrings(getString(R.string.play_link), packageName);
+        String appUrl = concatStrings(getString(R.string.play_link), packageName);
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
 
         if (intent == null) intent = new Intent(Intent.ACTION_VIEW, Uri.parse(appUrl));
@@ -98,11 +113,11 @@ public class YaService extends Service
             switch (state)
             {
                 case STATE_PLUG:
-                    setNotificationVisibility(true);
+                    setNotificationVisibility(VISIBLE);
                     break;
 
                 case STATE_UNPLUG:
-                    setNotificationVisibility(false);
+                    setNotificationVisibility(GONE);
                     break;
             }
         }

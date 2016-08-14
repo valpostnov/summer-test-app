@@ -3,13 +3,7 @@ package com.postnov.android.summerschoolapp.data.source.local;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
-
 
 /**
  * Created by platon on 19.07.2016.
@@ -17,19 +11,19 @@ import java.util.List;
 public class CacheImpl implements ICache<Artist>
 {
     private final File cachedFile;
-    private final JsonSerializer serializer;
+    private final Serializer<List<Artist>> serializer;
     private final FileManager fileManager;
 
-    public CacheImpl(File cacheDir, String name, JsonSerializer artistCacheSerializer)
+    public CacheImpl(File cacheDir, String name, Serializer<List<Artist>> jsonSerializer)
     {
         cachedFile = new File(cacheDir, name);
         fileManager = new FileManager();
-        serializer = artistCacheSerializer;
+        serializer = jsonSerializer;
     }
 
-    public CacheImpl(File cacheDir, JsonSerializer artistCacheSerializer)
+    public CacheImpl(File cacheDir, Serializer<List<Artist>> jsonSerializer)
     {
-        this(cacheDir, "artists.list", artistCacheSerializer);
+        this(cacheDir, "artists.list", jsonSerializer);
     }
 
     @Override

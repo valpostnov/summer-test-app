@@ -15,9 +15,6 @@ import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.NetworkManager;
 import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 
-import java.io.File;
-import java.util.List;
-
 /**
  * Created by platon on 09.08.2016.
  */

@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.utils.Utils;

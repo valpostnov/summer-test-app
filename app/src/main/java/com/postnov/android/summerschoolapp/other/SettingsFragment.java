@@ -14,7 +14,6 @@ import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.feature.YaService;
 import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
-import com.postnov.android.summerschoolapp.utils.PreferencesManager;
 
 import butterknife.BindView;
 

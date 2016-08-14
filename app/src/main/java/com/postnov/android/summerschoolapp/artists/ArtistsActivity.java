@@ -13,15 +13,16 @@ import android.view.MenuItem;
 import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.other.AboutFragment;
 import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
 import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 import com.postnov.android.summerschoolapp.feature.YaService;
+import com.postnov.android.summerschoolapp.other.AboutFragment;
 import com.postnov.android.summerschoolapp.other.SettingsFragment;
 import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
 import com.postnov.android.summerschoolapp.utils.Utils;
 
-import static com.postnov.android.summerschoolapp.utils.PreferencesManager.*;
+import static com.postnov.android.summerschoolapp.utils.PreferencesManager.HEADSET_FEATURE_STATE;
+import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SERVICE_RUNNING_STATE;
 
 public class ArtistsActivity extends Activity implements ToolbarProvider, FragmentTransactionManager
 {
