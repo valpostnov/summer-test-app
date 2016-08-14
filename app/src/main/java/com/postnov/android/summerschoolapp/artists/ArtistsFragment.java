@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.postnov.android.summerschoolapp.App;
@@ -23,7 +24,7 @@ import butterknife.BindView;
 public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ArtistsAdapter.OnItemClickListener, ArtistsView, ScrollHelperAdapter
 {
-    private static final int LIMIT = 20;
+    private static final int LOAD_LIMIT = 20;
     private static final int OFFSET = 0;
     private static int sCachedCountArtists = 20;
 
@@ -46,12 +47,14 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
+    public void onViewCreated(View view, Bundle savedState)
     {
-        super.onViewCreated(view, savedInstanceState);
+        super.onViewCreated(view, savedState);
 
         getToolbarProvider().updateToolbar(getString(R.string.app_name));
-        presenter = new ArtistsPresenterImpl(App.from(getActivity()).getArtistRepository());
+        presenter = new ArtistsPresenterImpl(
+                App.from(getActivity()).getArtistRepository(),
+                App.from(getActivity()).getNetworkManager());
 
         artistsAdapter = new ArtistsAdapter(getActivity());
         artistsAdapter.setOnItemClickListener(this);
@@ -78,11 +81,12 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
         presenter.unbind();
     }
 
+
     @Override
     public void onRefresh()
     {
         artistsAdapter.clear();
-        presenter.fetchArtists(true, OFFSET, LIMIT);
+        presenter.fetchArtists(true, OFFSET, LOAD_LIMIT);
     }
 
     @Override
@@ -93,9 +97,9 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void onLoadMore(int count)
+    public void onLoadMore(int offset)
     {
-        presenter.fetchArtists(false, count, count + LIMIT);
+        presenter.fetchArtists(false, offset, offset + LOAD_LIMIT);
     }
 
     @Override

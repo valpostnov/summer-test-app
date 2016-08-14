@@ -24,11 +24,11 @@ public class Repository implements IDataSource
     }
 
     @Override
-    public Observable<List<Artist>> getList(int from, int to)
+    public Observable<List<Artist>> getList(int offset, int limit)
     {
-        if (cache.isEmpty()) return fromRemote(from, to);
+        if (cache.isEmpty()) return fromRemote(offset, limit);
 
-        return fromLocal(from, to);
+        return fromLocal(offset, limit);
     }
 
     @Override
@@ -37,17 +37,17 @@ public class Repository implements IDataSource
         cache.clear();
     }
 
-    private Observable<List<Artist>> fromRemote(final int from, final int to)
+    private Observable<List<Artist>> fromRemote(final int offset, final int limit)
     {
-        return remote.getList(from, to)
+        return remote.getList(offset, limit)
                 .doOnNext(artists -> cache.put(artists))
-                .map(artists -> artists.subList(from, to));
+                .map(artists -> artists.subList(offset, limit));
     }
 
-    private Observable<List<Artist>> fromLocal(final int from, final int to)
+    private Observable<List<Artist>> fromLocal(final int offset, final int limit)
     {
         return Observable.just(cache.get())
-                .filter(artists -> (artists.size() != from))
-                .map(artists -> subList(from, to, artists));
+                .filter(artists -> (artists.size() != offset))
+                .map(artists -> subList(offset, limit, artists));
     }
 }

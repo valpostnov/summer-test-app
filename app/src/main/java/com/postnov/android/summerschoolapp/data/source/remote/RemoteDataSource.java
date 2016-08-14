@@ -31,7 +31,7 @@ public class RemoteDataSource implements IDataSource
     }
 
     @Override
-    public Observable<List<Artist>> getList(int from, int to)
+    public Observable<List<Artist>> getList(int offset, int limit)
     {
         return api.listArtists();
     }

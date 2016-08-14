@@ -3,7 +3,6 @@ package com.postnov.android.summerschoolapp.artists;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,6 @@ public class ArtistsAdapter extends RecyclerView.Adapter<ArtistsAdapter.ArtistsV
 
     public void changeList(List<Artist> newList)
     {
-        Log.d("TAG", "newList");
         artists.addAll(newList);
         notifyDataSetChanged();
     }
