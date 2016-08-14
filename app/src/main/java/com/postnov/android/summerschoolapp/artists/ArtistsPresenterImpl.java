@@ -8,6 +8,7 @@ import com.postnov.android.summerschoolapp.data.source.IDataSource;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -36,7 +37,7 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
         subscriptions.add(repository.getList(from, to)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError));
+                .subscribe(onNext, onError, onCompleted));
     }
 
     @Override
@@ -48,19 +49,19 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
     @Override
     public void unbind()
     {
-        artistsView.showProgressView(false);
         subscriptions.clear();
         artistsView = null;
     }
 
-    private Action1<List<Artist>> onNext = artists ->
-    {
+    private Action0 onCompleted = () -> {
         artistsView.showProgressView(false);
+    };
+
+    private Action1<List<Artist>> onNext = artists -> {
         artistsView.showArtists(artists);
     };
 
-    private Action1<Throwable> onError = e ->
-    {
+    private Action1<Throwable> onError = e -> {
         artistsView.showProgressView(false);
         artistsView.showError(e);
     };
