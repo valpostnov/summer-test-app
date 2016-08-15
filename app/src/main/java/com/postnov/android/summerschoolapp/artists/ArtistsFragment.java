@@ -116,8 +116,8 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void showError(Throwable error)
+    public void showError(String error)
     {
-        Utils.showToast(getActivity(), error.getMessage());
+        Utils.showToast(getActivity(), error);
     }
 }

@@ -5,6 +5,8 @@ import android.accounts.NetworkErrorException;
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsPresenter;
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsView;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
+import com.postnov.android.summerschoolapp.data.exception.DataSourceFetchingException;
+import com.postnov.android.summerschoolapp.data.exception.NetworkConnectionException;
 import com.postnov.android.summerschoolapp.data.source.IDataSource;
 import com.postnov.android.summerschoolapp.utils.INetworkManager;
 
@@ -44,7 +46,8 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
         }
         else
         {
-            artistsView.showError(new NetworkErrorException());
+            artistsView.showProgressView(false);
+            artistsView.showError(new NetworkConnectionException().getMessage());
         }
     }
 
@@ -80,6 +83,6 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
 
     private Action1<Throwable> onError = e -> {
         artistsView.showProgressView(false);
-        artistsView.showError(e);
+        artistsView.showError(new DataSourceFetchingException(e).getMessage());
     };
 }

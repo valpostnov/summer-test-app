@@ -11,5 +11,5 @@ public interface ArtistsView
 {
     void showArtists(List<Artist> artists);
     void showProgressView(boolean show);
-    void showError(Throwable t);
+    void showError(String error);
 }
