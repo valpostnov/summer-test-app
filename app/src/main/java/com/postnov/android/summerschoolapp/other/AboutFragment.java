@@ -22,7 +22,7 @@ public class AboutFragment extends BaseFragment
     public void onActivityCreated(Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        ToolbarProvider toolbarProvider = getToolbarProvider();
+        ToolbarProvider toolbarProvider = toolbarProvider();
         if (toolbarProvider != null) toolbarProvider.updateToolbar(getString(R.string.about_fragment), true);
     }
 

@@ -2,6 +2,7 @@ package com.postnov.android.summerschoolapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.data.source.IDataSource;
@@ -24,9 +25,14 @@ public class App extends Application
     private IPreferencesManager preferencesManager;
     private IDataSource artistRepository;
 
-    public static App from(Context context)
+    public static App get(Context context)
     {
         return (App) context.getApplicationContext();
+    }
+
+    public static App get(Fragment fragment)
+    {
+        return (App) fragment.getActivity().getApplicationContext();
     }
 
     public INetworkManager getNetworkManager()

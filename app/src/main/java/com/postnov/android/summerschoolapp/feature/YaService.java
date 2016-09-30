@@ -15,7 +15,6 @@ import android.support.v4.app.NotificationCompat;
 import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.R;
 import com.postnov.android.summerschoolapp.utils.IPreferencesManager;
-import com.postnov.android.summerschoolapp.utils.Utils;
 
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SERVICE_RUNNING_STATE;
 import static com.postnov.android.summerschoolapp.utils.Utils.concatStrings;
@@ -37,7 +36,7 @@ public class YaService extends Service
     {
         super.onCreate();
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        preferencesManager = App.from(this).getPreferencesManager();
+        preferencesManager = App.get(this).getPreferencesManager();
         preferencesManager.setBoolean(YA_SERVICE_RUNNING_STATE, true);
         headsetPlugReceiver = new HeadsetPlugReceiver();
         registerReceiver(headsetPlugReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));

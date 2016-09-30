@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.postnov.android.summerschoolapp.App;
@@ -15,7 +14,6 @@ import com.postnov.android.summerschoolapp.base.BaseFragment;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.other.RecyclerScrollListener;
 import com.postnov.android.summerschoolapp.other.ScrollHelperAdapter;
-import com.postnov.android.summerschoolapp.utils.Utils;
 
 import java.util.List;
 
@@ -50,11 +48,9 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onViewCreated(View view, Bundle savedState)
     {
         super.onViewCreated(view, savedState);
-
-        getToolbarProvider().updateToolbar(getString(R.string.app_name));
         presenter = new ArtistsPresenterImpl(
-                App.from(getActivity()).getArtistRepository(),
-                App.from(getActivity()).getNetworkManager());
+                App.get(this).getArtistRepository(),
+                App.get(this).getNetworkManager());
 
         artistsAdapter = new ArtistsAdapter(getActivity());
         artistsAdapter.setOnItemClickListener(this);
@@ -63,6 +59,12 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.addOnScrollListener(new RecyclerScrollListener(this));
         rv.setAdapter(artistsAdapter);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        toolbarProvider().updateToolbar(getString(R.string.app_name));
     }
 
     @Override
@@ -93,7 +95,7 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     public void onItemClick(View view, int position)
     {
         Artist artist = artistsAdapter.getList().get(position);
-        getFragmentTransactionManager().replaceFragment(DetailsFragment.newInstance(artist));
+        fragmentsInteractor().openDetails(artist);
     }
 
     @Override
@@ -118,6 +120,6 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void showError(String error)
     {
-        Utils.showToast(getActivity(), error);
+
     }
 }

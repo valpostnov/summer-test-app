@@ -1,20 +1,23 @@
-package com.postnov.android.summerschoolapp.artists;
+package com.postnov.android.summerschoolapp.base;
 
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.postnov.android.summerschoolapp.App;
 import com.postnov.android.summerschoolapp.BuildConfig;
 import com.postnov.android.summerschoolapp.R;
-import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
+import com.postnov.android.summerschoolapp.artists.ArtistsFragment;
+import com.postnov.android.summerschoolapp.artists.DetailsFragment;
+import com.postnov.android.summerschoolapp.artists.interfaces.FragmentsInteractor;
 import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
+import com.postnov.android.summerschoolapp.data.entity.Artist;
 import com.postnov.android.summerschoolapp.feature.YaService;
 import com.postnov.android.summerschoolapp.other.AboutFragment;
 import com.postnov.android.summerschoolapp.other.SettingsFragment;
@@ -24,7 +27,7 @@ import com.postnov.android.summerschoolapp.utils.Utils;
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.HEADSET_FEATURE_STATE;
 import static com.postnov.android.summerschoolapp.utils.PreferencesManager.YA_SERVICE_RUNNING_STATE;
 
-public class ArtistsActivity extends Activity implements ToolbarProvider, FragmentTransactionManager
+public class BaseActivity extends AppCompatActivity implements ToolbarProvider, FragmentsInteractor
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -37,7 +40,7 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
             replaceFragmentWithoutBackStack(ArtistsFragment.newInstance());
         }
 
-        IPreferencesManager preferencesManager = App.from(this).getPreferencesManager();
+        IPreferencesManager preferencesManager = App.get(this).getPreferencesManager();
 
         if (preferencesManager.getBoolean(HEADSET_FEATURE_STATE)
                 && !preferencesManager.getBoolean(YA_SERVICE_RUNNING_STATE))
@@ -46,38 +49,27 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
         }
     }
 
-    @Override
     public void replaceFragment(Fragment fragment)
     {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_fragment, fragment)
                 .addToBackStack(null)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
-    @Override
     public void replaceFragmentWithoutBackStack(Fragment fragment)
     {
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content_fragment, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
     }
 
     @Override
-    public void removeFragment(Fragment fragment)
-    {
-        getFragmentManager().beginTransaction()
-                .remove(fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                .commit();
-    }
-
-    @Override
     public void updateToolbar(String title, boolean hasBackButton)
     {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(title);
         actionBar.setDisplayHomeAsUpEnabled(hasBackButton);
     }
@@ -133,5 +125,10 @@ public class ArtistsActivity extends Activity implements ToolbarProvider, Fragme
         feedbackIntent.setData(Uri.parse(recipient));
 
         startActivity(Intent.createChooser(feedbackIntent, getString(R.string.support_chooser_text)));
+    }
+
+    @Override
+    public void openDetails(Artist artist) {
+        replaceFragment(DetailsFragment.newInstance(artist));
     }
 }

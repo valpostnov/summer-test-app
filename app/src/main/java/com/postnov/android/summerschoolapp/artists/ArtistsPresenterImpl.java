@@ -1,7 +1,5 @@
 package com.postnov.android.summerschoolapp.artists;
 
-import android.accounts.NetworkErrorException;
-
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsPresenter;
 import com.postnov.android.summerschoolapp.artists.interfaces.ArtistsView;
 import com.postnov.android.summerschoolapp.data.entity.Artist;
@@ -22,14 +20,14 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by platon on 15.07.2016.
  */
-public class ArtistsPresenterImpl implements ArtistsPresenter
+class ArtistsPresenterImpl implements ArtistsPresenter
 {
     private ArtistsView artistsView;
     private CompositeSubscription subscriptions;
     private IDataSource repository;
     private INetworkManager networkManager;
 
-    public ArtistsPresenterImpl(IDataSource repository, INetworkManager networkManager)
+    ArtistsPresenterImpl(IDataSource repository, INetworkManager networkManager)
     {
         this.repository = repository;
         this.networkManager = networkManager;
@@ -70,14 +68,11 @@ public class ArtistsPresenterImpl implements ArtistsPresenter
         return repository.getList(offset, limit)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError, onCompleted);
+                .subscribe(onNext, onError);
     }
 
-    private Action0 onCompleted = () -> {
-        artistsView.showProgressView(false);
-    };
-
     private Action1<List<Artist>> onNext = artists -> {
+        artistsView.showProgressView(false);
         artistsView.showArtists(artists);
     };
 

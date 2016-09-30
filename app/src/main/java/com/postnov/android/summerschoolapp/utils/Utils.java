@@ -12,11 +12,6 @@ import java.util.List;
  */
 public class Utils
 {
-    public static void showToast(Context context, String message)
-    {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
-    }
-
     public static String concatStrings(String ... strings)
     {
         StringBuilder builder = new StringBuilder();

@@ -2,7 +2,6 @@ package com.postnov.android.summerschoolapp.other;
 
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +25,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     @BindView(R.id.setting_hf_checkbox)
     CheckBox headsetFeatureCheckBox;
 
-    public static Fragment newInstance()
+    public static SettingsFragment newInstance()
     {
         return new SettingsFragment();
     }
@@ -35,7 +34,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        preferencesManager = App.from(getActivity()).getPreferencesManager();
+        preferencesManager = App.get(this).getPreferencesManager();
     }
 
     @Override
@@ -48,7 +47,7 @@ public class SettingsFragment extends BaseFragment implements CompoundButton.OnC
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        getToolbarProvider().updateToolbar(getString(R.string.action_settings), true);
+        toolbarProvider().updateToolbar(getString(R.string.action_settings), true);
 
         headsetFeatureCheckBox.setOnCheckedChangeListener(this);
         headsetFeatureCheckBox.setChecked(getHeadsetFeatureState());

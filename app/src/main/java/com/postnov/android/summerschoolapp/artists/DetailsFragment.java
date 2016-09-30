@@ -60,7 +60,7 @@ public class DetailsFragment extends BaseFragment
                 artist.getTracks(),
                 artist.getTracks());
 
-        getToolbarProvider().updateToolbar(artist.getName(), true);
+        toolbarProvider().updateToolbar(artist.getName(), true);
 
         genresTextView.setText(artist.getGenres());
         albumsTracksTextView.setText(Utils.concatStrings(tracks, ", " , albums));

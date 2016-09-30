@@ -1,15 +1,14 @@
 package com.postnov.android.summerschoolapp.base;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.postnov.android.summerschoolapp.artists.ArtistsActivity;
-import com.postnov.android.summerschoolapp.artists.interfaces.FragmentTransactionManager;
+import com.postnov.android.summerschoolapp.artists.interfaces.FragmentsInteractor;
 import com.postnov.android.summerschoolapp.artists.interfaces.ToolbarProvider;
 
 import butterknife.ButterKnife;
@@ -22,7 +21,7 @@ public abstract class BaseFragment extends Fragment
 {
     private Unbinder unbinder;
     private ToolbarProvider toolbarProvider;
-    private FragmentTransactionManager fragmentTransactionManager;
+    private FragmentsInteractor fragmentsInteractor;
 
     protected abstract int getLayout();
 
@@ -30,12 +29,12 @@ public abstract class BaseFragment extends Fragment
     public void onAttach(Context context)
     {
         super.onAttach(context);
-        ArtistsActivity activity = (ArtistsActivity) getActivity();
+        BaseActivity activity = (BaseActivity) context;
 
         if (activity != null)
         {
             toolbarProvider = activity;
-            fragmentTransactionManager = activity;
+            fragmentsInteractor = activity;
         }
     }
 
@@ -64,16 +63,16 @@ public abstract class BaseFragment extends Fragment
     public void onDetach()
     {
         toolbarProvider = null;
-        fragmentTransactionManager = null;
+        fragmentsInteractor = null;
         super.onDetach();
     }
 
-    protected FragmentTransactionManager getFragmentTransactionManager()
+    protected FragmentsInteractor fragmentsInteractor()
     {
-        return fragmentTransactionManager;
+        return fragmentsInteractor;
     }
 
-    protected ToolbarProvider getToolbarProvider()
+    protected ToolbarProvider toolbarProvider()
     {
         return toolbarProvider;
     }
