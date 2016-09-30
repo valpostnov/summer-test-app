@@ -18,6 +18,7 @@ import com.postnov.android.summerschoolapp.other.ScrollHelperAdapter;
 import java.util.List;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener,
         ArtistsAdapter.OnItemClickListener, ArtistsView, ScrollHelperAdapter
@@ -120,6 +121,6 @@ public class ArtistsFragment extends BaseFragment implements SwipeRefreshLayout.
     @Override
     public void showError(String error)
     {
-
+        Timber.tag("ArtistsFragment").e(error);
     }
 }
